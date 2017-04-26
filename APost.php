@@ -74,20 +74,19 @@ class autoTPost
 		//	 'custom_fields' => array($customfields),
              'date_created_gmt' => $date
           );
-		$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
-			try{
-			$XmlRpc_result = $XmlRpc_client->query(
-			'metaWeblog.newPost',$params
-		);
-		$data = $XmlRpc_client->getResponse();
-		}
-		catch (Exception $e){
-		var_dump ( $e->getMessage ());
-		}
-	echo $data->saveImage($image);
-	return ($data);
+		// Gather post data.
+$my_post = array(
+    'post_title'    => 'My post',
+    'post_content'  => 'This is my post.',
+    'post_status'   => 'publish',
+    'post_author'   => 1,
+    'post_category' => array( 8,39 )
+);
+ 
+$post_id = wp_insert_post( $my_post, $wp_error );
+	return ($post_id);
 	}
-	
+/*	
 	public function createPost($title,$keywords,$category,$post_excerpt,$body)
 	{
 		$user = $this->_user;
@@ -124,7 +123,7 @@ class autoTPost
 		}
 		return ($data);
 	}
-	
+	*/
 	public function saveImage($imgurl)
 	{
 		//add time to the current filename
@@ -226,7 +225,7 @@ return ($attach_id);
 			$width = floor($width * $ratio);
 			$sizeAppend = "-{$width}x{$height}";
 		}
-		// upload picture
+		/* upload picture
 		$user = $this->_user;
 		$pass = $this->_pass;
 		$data = array(
@@ -257,7 +256,7 @@ return ($attach_id);
 		$output.= "</a> {$title}[/caption]";
 		return $output;
 	}
-	/**
+	**
 	 * Returns an image's file' basepath, basename and extension.
 	 * @param string $path	The image's path.
 	 * @return array		Contains basepath, basename and extension.
