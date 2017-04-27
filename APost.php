@@ -1,17 +1,17 @@
 <?php
-require_once ( 'IXRlib.php' );
+require_once ( '/home/ckww/AP/IXRlib.php' );
 
 class autoTPost
 {
 	/**
 	 * config
-	 */
 	private $_user;
     private $_pass;
     private $_url;
 	private $_imgMaxWidth;
 	private $_imgMaxHeight;
 	private $_path;
+	 */
 
 	const DELIMITER = '|';
 	/**
@@ -29,8 +29,7 @@ class autoTPost
 	 * initial content.
 	 * @param string $htmlString	Sets the post's initial content.
 	 * @param string $identifier	Fetches the correct set of config data.
-	 */
-	public function __construct($identifier)
+	 	public function __construct($identifier)
 	{
 	    $config = parse_ini_file('config.ini', true);
 	    if (!isset($config[$identifier])) {
@@ -44,58 +43,33 @@ class autoTPost
 		$this->_imgMaxHeight = $config['max_height'];
 		$this->_path = $config['path'];
 		}
-	/**
 	 * Creates a new post.
 	 * The post itself remains empty, since we may have to replace html markup.
 	 * @return int The inserted post's ID.
 	 */
-	public function createPostnImg($title,$keywords,$category,$post_excerpt,$body, $image)
+	 public function createPostnImg($title,$keywords,$category,$post_excerpt,$body, $image)
 	{
-		$user = $this->_user;
-		$pass = $this->_pass;
-		$url = $this->_url."/xmlrpc.php";
-		$path = $this->_path;
-		$XmlRpc_result = null;
-		$XmlRpc_client = new IXR_Client ($url);
-		$date = new IXR_Date(strtotime('now') ); // writing publish date
-		$encoding='UTF-8';
-		//$customfields=array('key'=>'sourceFeed', 'value'=>$source); // Custom field
-		$title = htmlentities($title,ENT_NOQUOTES,$encoding);
-		$keywords = htmlentities($keywords,ENT_NOQUOTES,$encoding); 
-		$post_excerpt = htmlentities($post_excerpt,ENT_NOQUOTES,$encoding); 
-		$content = array(
-             'title'=>$title,
-             'description'=>$body,
-             'mt_allow_comments'=>0, // 1 to allow comments
-             'mt_allow_pings'=>0, // 1 to allow trackbacks
-             'post_type'=>'post',
-             'mt_keywords'=>$keywords,
-             'categories'=>array($category),
-		//	 'custom_fields' => array($customfields),
-             'date_created_gmt' => $date
-          );
 		// Gather post data.
 $my_post = array(
-    'post_title'    => 'My post',
-    'post_content'  => 'This is my post.',
-    'post_status'   => 'publish',
+    'post_title'    => $title,
+    'post_content'  => $body,
+	'post_type' => 'post',
+     'post_excerpt'  => $post_excerpt,
+	 'post_status'   => 'publish',
     'post_author'   => 1,
-    'post_category' => array( 8,39 )
-);
+    'post_category' => array( $category )
+	);
  
-$post_id = wp_insert_post( $my_post, $wp_error );
+	$post_id = wp_insert_post( $my_post,'true' );
+	
+	wp_set_post_tags( $post_id, $keywords, 'true' );
+	
+	//wp_set_post_categories( $post_id, $_categories, 'true' );
 	return ($post_id);
-	}
-/*	
+}
+
 	public function createPost($title,$keywords,$category,$post_excerpt,$body)
 	{
-		$user = $this->_user;
-		$pass = $this->_pass;
-		$url = $this->_url."/xmlrpc.php";
-		$XmlRpc_result = null;
-		$XmlRpc_client = new IXR_Client ($url);
-		$date = new IXR_Date(strtotime('now') ); // writing publish date
-		$encoding='UTF-8';
 	//	$customfields=array('key'=>'sourceFeed', 'value'=>$source); // Custom field
 		$title = htmlentities($title,ENT_NOQUOTES,$encoding);
 		$keywords = htmlentities($keywords,ENT_NOQUOTES,$encoding); 
@@ -103,27 +77,20 @@ $post_id = wp_insert_post( $my_post, $wp_error );
 		$content = array(
              'title'=>$title,
              'description'=>$body,
-             'mt_allow_comments'=>0, // 1 to allow comments
-             'mt_allow_pings'=>0, // 1 to allow trackbacks
+             'mt_allow_comments'=>0,
+             'mt_allow_pings'=>0, 
              'post_type'=>'post',
              'mt_keywords'=>$keywords,
              'categories'=>array($category),
 			// 'custom_fields' => array($customfields),
              'date_created_gmt' => $date
           );
-		$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
-			try{
-			$XmlRpc_result = $XmlRpc_client->query(
-			'metaWeblog.newPost',$params
-		);
-		$data = $XmlRpc_client->getResponse();
-		}
-		catch (Exception $e){
-		var_dump ( $e->getMessage ());
-		}
+//$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
+		$data = $wp_insert_post($content, 'true');
+	
 		return ($data);
 	}
-	*/
+
 	public function saveImage($imgurl)
 	{
 		//add time to the current filename
@@ -131,10 +98,6 @@ $name = basename($imgurl);
 list($txt, $ext) = explode(".", $name);
 $name = $txt.time();
 $name = $name.".".$ext;
-	$user = $this->_user;
-	$pass = $this->_pass;
-	$url = $this->_url;
-	$path = $this->_path;
 //check if the files are only image / document
 if($ext == "jpg" or $ext == "png" or $ext == "gif" or $ext == "doc" or $ext == "docx" or $ext == "pdf"){
 //here is the actual code to get the file from the url and save it to the uploads folder
@@ -151,8 +114,6 @@ uploadAttachImage($upload, $data);
 	
 	public function uploadAttachImage($image, $postId)
 	{
-$url = $this->_url;
-$path = $this->_path;
 	// $filename should be the path to a file in the upload directory.
 $filename = $image;
 // The ID of the post this attachment is for.
@@ -225,87 +186,5 @@ return ($attach_id);
 			$width = floor($width * $ratio);
 			$sizeAppend = "-{$width}x{$height}";
 		}
-		/* upload picture
-		$user = $this->_user;
-		$pass = $this->_pass;
-		$data = array(
-			'name' => $filename,
-			'type' => $type,
-			'bits' => new IXR_Base64($filestream)
-		);
-		if (!$this->_client->query('wp.uploadFile', 1, $user, $pass, $data))
-			$this->_displayError("uploading photo $path");
-		$response = $this->_client->getResponse();
-		$imageID = $response['id'];
-		$imageUrl = $response['url'];
-		$fileMeta = $this->_extractFilenameData($imageUrl); // necessary for building image-URL
-		// add title and other data
-		$data = array(
-			'post_title' => $title,
-			'post_excerpt' => $title,
-			'post_content' => $title
-		);
-		if (!$this->_client->query('wp.editPost', 1, $user, $pass, $imageID, $data))
-			$this->_displayError("editing photo $path");
-		// prepare output
-		$titleEscaped = htmlspecialchars($title);
-		$srcFinal = $fileMeta['basepath'] . $fileMeta['basename'] . $sizeAppend . $fileMeta['extension'];
-		$output = "[caption id='attachment_$imageID' align='aligncenter' width='$width']";
-		$output.= "<a href='$imageUrl'>";
-		$output.= "<img class='wp-image-$imageID' title='$titleEscaped' src='$srcFinal' alt='$titleEscaped' width='$width' height='$height' />";
-		$output.= "</a> {$title}[/caption]";
-		return $output;
-	}
-	**
-	 * Returns an image's file' basepath, basename and extension.
-	 * @param string $path	The image's path.
-	 * @return array		Contains basepath, basename and extension.
-	 */
-	private function _extractFilenameData($path)
-	{
-		if ($indexOfLastSlash = strrpos($path, '/')) {
-			$filename = substr($path, $indexOfLastSlash + 1);
-			$basepath = substr($path, 0, $indexOfLastSlash + 1);
-		} else {
-			$filename = $path;
-			$basepath = '';
-		}
-		$indexOfLastDot = strrpos($filename, '.');
-		$basename = substr($filename, 0, $indexOfLastDot);
-		$extension = substr($filename, $indexOfLastDot);
-		return array(
-			'basepath' => $basepath,
-			'basename' => $basename,
-			'extension' => $extension
-		);
-	}
-	/**
-	 * Adds taxonomy items as metadata.
-	 *
-	 * @param string $key
-	 * @param array $data
-	 */
-	private function _addTaxonomyItems($key, $data)
-	{
-		if (isset($this->_postData['terms_names']))
-			$this->_postData['terms_names'][$key] = $data;
-		else
-			$this->_postData['terms_names'] = array($key => $data);
-	}
-	/**
-	 * Displays error message and quits execution.
-	 *
-	 * @param string $position	Position where error occured.
-	 * @param string $msg		The message to display.
-	 */
-	private function _displayError($position, $msg = '')
-	{
-		if (empty($msg)) {
-			$code = $this->_client->getErrorCode();
-			$msg = $this->_client->getErrorMessage();
-		} else
-			$code = '666';
-		echo "Position: $position<br />";
-		exit("An error occurred - $code: $msg");
 	}
 }

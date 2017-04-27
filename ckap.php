@@ -74,12 +74,13 @@ define('SCOPES', implode(' ', array(
   $client->setAccessType('offline');
 
   // Load previously authorized credentials from a file.
-  $credentialsPath = (CREDENTIALS_PATH);
+  $credentialsPath = expandHomeDirectory(CREDENTIALS_PATH);
   if (file_exists($credentialsPath)) {
     $accessToken = json_decode(file_get_contents($credentialsPath), true);
   } else {
+    // Request authorization from the user.
     $authUrl = $client->createAuthUrl();
-    echo("Open the following link in your browser:\n%s\n" $authUrl);
+    echof("Open the following link in your browser:\n%s\n", $authUrl);
     echo 'Enter verification code: ';
     $authCode = trim(fgets(STDIN));
 
@@ -91,7 +92,7 @@ define('SCOPES', implode(' ', array(
       mkdir(dirname($credentialsPath), 0700, true);
     }
     file_put_contents($credentialsPath, json_encode($accessToken));
-    echo("Credentials saved to %s\n", $credentialsPath);
+    echof("Credentials saved to %s\n", $credentialsPath);
   }
   $client->setAccessToken($accessToken);
 
@@ -163,10 +164,10 @@ if (count($values) == 0) {
 		}
 		if (is_numeric($resp)){
 		// DELETE OR MOVE ROW....
-		echo $resp;
+		
 		} else {
 			// EPIC FAIL....
-		echo 'error';;
+		
 		}
 	}
 }

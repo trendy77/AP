@@ -38,11 +38,12 @@ function cron_add_ten( $schedules ) {
     );
     return $schedules;
 }
+ $_SESSION['number'];
 
  function repeat() {
-      $number = $_GLOBAL['number'];
+      $number = $_SESSION['number'];
       $number++;
-    $_GLOBAL['number'] = $number;
+    $_SESSION['number'] = $number;
  }
 
 function wpapgpap_authon()
@@ -96,7 +97,7 @@ define('SCOPES', implode(' ', array(
 return $client;
 }
 
-function doAline(){
+function doAline($number){
 	require_once '/home/ckww/AP/vendor/autoload.php';
 include_once '/home/ckww/AP/tPost.php';
 include_once '/home/ckww/AP/base.php';
@@ -107,14 +108,14 @@ $spreadsheetId ="1RnmnEB6tX_Ic6Gf6EWbJyIa9yZZ2lQwSQFz5UO1vQsw";
 define('SCOPES', implode(' ', array(
   Google_Service_Sheets::SPREADSHEETS)
 ));
-if (!isset($_GLOBAL['number'])) {
+if (!isset($_SESSION['number'])) {
 $number = 5;
 } else {
-echo 'numbersheet is set @' . $_GLOBAL['number'];
-$number = $_GLOBAL['number'];
+echo 'numbersheet is set @' . $_SESSION['number'];
+$number = $_SESSION['number'];
 }
 $thesheet = $wpapgetoption['sheet'];
-$range = 'Sheet1!A'.$_GLOBAL['number']. ':H' . $_GLOBAL['number'];
+$range = 'Sheet1!A'.$_SESSION['number']. ':H' . $_SESSION['number'];
 $response = $service->spreadsheets_values->get($spreadsheetId, $range);
 $values = $response->getValues();
 if (count($values) == 0) {
