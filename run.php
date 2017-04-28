@@ -1,10 +1,7 @@
 <?php 
-$_SESSION['number'] = 5;
-
-function wpapgpap_authon()
-{
-require_once '/home/ckww/AP/vendor/autoload.php';
-include_once '/home/ckww/AP/base.php';
+require_once 'wp-load.php';
+require_once '~/home/ckww/AP/vendor/autoload.php';
+include_once '~/home/ckwwR/AP/base.php';
 define('APPLICATION_NAME', 'WP-AP');
 define('CREDENTIALS_PATH', '~/.credentials/sheets.googleapis.com-php-quickstart.json');
 define('CLIENT_SECRET_PATH', 'tpausecret.json');
@@ -24,53 +21,29 @@ $client->setAuthConfig(CLIENT_SECRET_PATH);
     echo "Open the following link in your browser:\n%s\n", $authUrl ;
     echo 'Enter verification code: ';
     $authCode = trim(fgets(STDIN));
-
-    // Exchange authorization code for an access token.
-    $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
-
-    // Store the credentials to disk.
-    if(!file_exists(dirname($credentialsPath))) {
+     $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
+  if(!file_exists(dirname($credentialsPath))) {
       mkdir(dirname($credentialsPath), 0700, true);
     }
     file_put_contents($credentialsPath, json_encode($accessToken));
     echof("Credentials saved to %s\n", $credentialsPath);
   }
   $client->setAccessToken($accessToken);
-
-  // Refresh the token if it's expired.
-  if ($client->isAccessTokenExpired()) {
+    if ($client->isAccessTokenExpired()) {
     $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
     file_put_contents($credentialsPath, json_encode($client->getAccessToken()));
   }
-  
 $service = new Google_Service_Sheets($client);
-
 define('SCOPES', implode(' ', array(
   Google_Service_Sheets::SPREADSHEETS)
 ));
-return $client;
-}
-
-//global $post;
-function wpapgpap(){	
-
-require_once 'home/ckww/AP/vendor/autoload.php';
-include_once 'APost.php';
-
- $client = wpapgpap_authon();
-$service = new Google_Service_Sheets($client);
 $spreadsheetId ="1RnmnEB6tX_Ic6Gf6EWbJyIa9yZZ2lQwSQFz5UO1vQsw";
-
-define('SCOPES', implode(' ', array(
-  Google_Service_Sheets::SPREADSHEETS)
-));
-if (!isset($_SESSION['number'])) {
-echo 'numbersheet is not set' . $_SESSION['number'];
+if (!isset($number)) {
+$number= 5; 
 } else {
-echo 'numbersheet is set @' . $_SESSION['number'];
+echo 'numbersheet @' . $number;
 }
-$thesheet = $wpapgetoption['sheet'];
-$range = 'Sheet1!A'.$_SESSION['number']. ':H' . $_SESSION['number'];
+$range = 'Sheet1!A'.$number. ':H' . $number;
 $response = $service->spreadsheets_values->get($spreadsheetId, $range);
 $values = $response->getValues();
 if (count($values) == 0) {
@@ -82,39 +55,34 @@ if (count($values) == 0) {
  	$source=$row[2];
 	$category=$row[3].$row[4];
  	$image=$row[5];
- 	$identifier = 'ckww';
+ //	$identifier = 'ckww';
  	$keywords=$row[7];
 	}
 	if ($keywords == null){
 		$keywords = get_hashTags($source);
-// ADD TAGS
-	} else {
-	$post_excerpt=strip_tags($row[1]);	
-	echo $post_excerpt;
-// for testing purposes
-			//echo $post_excerpt."\n";
-		$obj= new autoTpost();
-		$obj->replaceImageMarkup($body);
-			if ($image != null){
-		$resp = $obj->createPostnImg($title,$keywords,$category,$post_excerpt,$body,$image);
-		} else {
-		$resp = $obj->createPost($title,$keywords,$category,$post_excerpt,$body);
 		}
-			if (is_numeric($resp)){
-			// DELETE OR MOVE ROW....
+	$post_excerpt=strip_tags($row[1]);	
+  $new_post = array(
+        'post_title'    => $title,
+        'post_content'  => $body,
+        'post_status'   => 'publish',
+        'post_date'     => $date = strtotime('now'),
+        'post_author'   => '1',
+        'post_type'     => 'post',
+        'post_category' => array($category)
+    );
+    $post_id = wp_insert_post($new_post);
+	wp_set_post_tags( $post_id, $keywords, 'true' );
+		if (is_numeric($post_id)){
 			repeat();
-			echo $resp;
-			return $resp;
 			} else {
 			// EPIC FAIL....
 			echo 'fail';
 			}
-		echo $resp;
-		return $resp;
 		}
-	}
-}
- function repeat() {
+	
+
+	function repeat() {
       $number = $_SESSION['number'];
       $number++;
     $_SESSION['number'] = $number;

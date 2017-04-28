@@ -57,7 +57,7 @@ class autoTPost
 		$path = $this->_path;
 		$XmlRpc_result = null;
 		$XmlRpc_client = new IXR_Client ($url);
-		$date = new IXR_Date(strtotime('now') ); // writing publish date
+		$date = strtotime('now'); 
 		$encoding='UTF-8';
 		//$customfields=array('key'=>'sourceFeed', 'value'=>$source); // Custom field
 		$title = htmlentities($title,ENT_NOQUOTES,$encoding);
