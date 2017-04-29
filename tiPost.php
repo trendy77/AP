@@ -5,13 +5,13 @@ class autoTPost
 {
 	/**
 	 * config
+	 */
 	private $_user;
     private $_pass;
     private $_url;
 	private $_imgMaxWidth;
 	private $_imgMaxHeight;
 	private $_path;
-	 */
 
 	const DELIMITER = '|';
 	/**
@@ -29,7 +29,8 @@ class autoTPost
 	 * initial content.
 	 * @param string $htmlString	Sets the post's initial content.
 	 * @param string $identifier	Fetches the correct set of config data.
-	 	public function __construct($identifier)
+	 */
+	public function __construct($identifier)
 	{
 	    $config = parse_ini_file('config.ini', true);
 	    if (!isset($config[$identifier])) {
@@ -43,32 +44,59 @@ class autoTPost
 		$this->_imgMaxHeight = $config['max_height'];
 		$this->_path = $config['path'];
 		}
+	/**
 	 * Creates a new post.
 	 * The post itself remains empty, since we may have to replace html markup.
 	 * @return int The inserted post's ID.
 	 */
-	 public function createPostnImg($title,$keywords,$category,$post_excerpt,$body, $image)
+	public function createPostnImg($title,$keywords,$category,$post_excerpt,$body, $image)
 	{
-		// Gather post data.
-$my_post = array(
-    'post_title'    => $title,
-    'post_content'  => $body,
-     'post_excerpt'  => $post_excerpt,
-	 'post_status'   => 'publish',
-    'post_author'   => 1,
-    'post_category' => array( $category )
-	);
- 
-	$post_id = wp_insert_post( $my_post, $wp_error );
+		$user = $this->_user;
+		$pass = $this->_pass;
+		$url = $this->_url."/xmlrpc.php";
+		$path = $this->_path;
+		$XmlRpc_result = null;
+		$XmlRpc_client = new IXR_Client ($url);
+		$date = new IXR_Date(strtotime('now') ); // writing publish date
+		$encoding='UTF-8';
+		//$customfields=array('key'=>'sourceFeed', 'value'=>$source); // Custom field
+		$title = htmlentities($title,ENT_NOQUOTES,$encoding);
+		$keywords = htmlentities($keywords,ENT_NOQUOTES,$encoding); 
+		$post_excerpt = htmlentities($post_excerpt,ENT_NOQUOTES,$encoding); 
+		$content = array(
+             'title'=>$title,
+             'description'=>$body,
+             'mt_allow_comments'=>0, // 1 to allow comments
+             'mt_allow_pings'=>0, // 1 to allow trackbacks
+             'post_type'=>'post',
+             'mt_keywords'=>$keywords,
+             'categories'=>array($category),
+		//	 'custom_fields' => array($customfields),
+             'date_created_gmt' => $date
+          );
+		$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
+			try{
+			$XmlRpc_result = $XmlRpc_client->query(
+			'metaWeblog.newPost',$params
+		);
+		$data = $XmlRpc_client->getResponse();
+		}
+		catch (Exception $e){
+		var_dump ( $e->getMessage ());
+		}
+	echo $data->saveImage($image);
+	return ($data);
+	}
 	
-	wp_set_post_tags( $post_id, $keywords, 'true' )
-	
-	//wp_set_post_categories( $post_id, $_categories, 'true' );
-	return ($post_id);
-}
-
 	public function createPost($title,$keywords,$category,$post_excerpt,$body)
 	{
+		$user = $this->_user;
+		$pass = $this->_pass;
+		$url = $this->_url."/xmlrpc.php";
+		$XmlRpc_result = null;
+		$XmlRpc_client = new IXR_Client ($url);
+		$date = new IXR_Date(strtotime('now') ); // writing publish date
+		$encoding='UTF-8';
 	//	$customfields=array('key'=>'sourceFeed', 'value'=>$source); // Custom field
 		$title = htmlentities($title,ENT_NOQUOTES,$encoding);
 		$keywords = htmlentities($keywords,ENT_NOQUOTES,$encoding); 
@@ -76,22 +104,27 @@ $my_post = array(
 		$content = array(
              'title'=>$title,
              'description'=>$body,
-             'mt_allow_comments'=>0,
-             'mt_allow_pings'=>0, 
+             'mt_allow_comments'=>0, // 1 to allow comments
+             'mt_allow_pings'=>0, // 1 to allow trackbacks
              'post_type'=>'post',
              'mt_keywords'=>$keywords,
              'categories'=>array($category),
 			// 'custom_fields' => array($customfields),
              'date_created_gmt' => $date
           );
-//$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
-		$data = $wp_insert_post($content, $wp_error);
-	} catch (Exception $e){
+		$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
+			try{
+			$XmlRpc_result = $XmlRpc_client->query(
+			'metaWeblog.newPost',$params
+		);
+		$data = $XmlRpc_client->getResponse();
+		}
+		catch (Exception $e){
 		var_dump ( $e->getMessage ());
 		}
 		return ($data);
 	}
-
+	
 	public function saveImage($imgurl)
 	{
 		//add time to the current filename
@@ -99,6 +132,10 @@ $name = basename($imgurl);
 list($txt, $ext) = explode(".", $name);
 $name = $txt.time();
 $name = $name.".".$ext;
+	$user = $this->_user;
+	$pass = $this->_pass;
+	$url = $this->_url;
+	$path = $this->_path;
 //check if the files are only image / document
 if($ext == "jpg" or $ext == "png" or $ext == "gif" or $ext == "doc" or $ext == "docx" or $ext == "pdf"){
 //here is the actual code to get the file from the url and save it to the uploads folder
@@ -115,6 +152,8 @@ uploadAttachImage($upload, $data);
 	
 	public function uploadAttachImage($image, $postId)
 	{
+$url = $this->_url;
+$path = $this->_path;
 	// $filename should be the path to a file in the upload directory.
 $filename = $image;
 // The ID of the post this attachment is for.
@@ -187,7 +226,7 @@ return ($attach_id);
 			$width = floor($width * $ratio);
 			$sizeAppend = "-{$width}x{$height}";
 		}
-		/* upload picture
+		// upload picture
 		$user = $this->_user;
 		$pass = $this->_pass;
 		$data = array(
@@ -218,7 +257,7 @@ return ($attach_id);
 		$output.= "</a> {$title}[/caption]";
 		return $output;
 	}
-	**
+	/**
 	 * Returns an image's file' basepath, basename and extension.
 	 * @param string $path	The image's path.
 	 * @return array		Contains basepath, basename and extension.
