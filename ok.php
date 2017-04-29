@@ -1,13 +1,13 @@
 <?php
-// client id :  1028943931412-c4p691egh52p706gcjgm5ni7kvdh7ru2.apps.googleusercontent.com 
-// secret :  qPppw87RNBzrAP1QTchy57-V 
-require_once '/home/$USER/AP/vendor/autoload.php';
-include_once 'tPost.php';
+$url = plugins_url() . 'aaaAutoPost/vendor/autoload.php';
+require_once(ABSPATH . 'wp-load.php');
+require_once( $url );
+//include_once 'tPost.php';
 include_once 'base.php';
 
 define('APPLICATION_NAME', 'My Project');
 define('CREDENTIALS_PATH', '~/.credentials/sheets.googleapis.com-php-quickstart.json');
-define('CLIENT_SECRET_PATH', 'faarkeffort.json');
+define('CLIENT_SECRET_PATH', 'tpausecret.json');
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-php-quickstart.json
 define('SCOPES', implode(' ', array(
@@ -28,7 +28,7 @@ function getClient() {
   } else {
     // Request authorization from the user.
     $authUrl = $client->createAuthUrl();
-    echof("Open the following link in your browser:\n%s\n", $authUrl);
+    //echo("Open the following link in your browser:\n%s\n", $authUrl);
     echo 'Enter verification code: ';
     $authCode = trim(fgets(STDIN));
     // Exchange authorization code for an access token.
@@ -56,12 +56,11 @@ function expandHomeDirectory($path) {
 
 
 
-
+// on install...
 // Get the API client and construct the service object.
 $client = getClient();
 $service = new Google_Service_Sheets($client);
-$NUMBERSHEET = 0;
-// THIS IS SET TO JUST RUN FOOTBALL SHEET URL = https://docs.google.com/spreadsheets/d/1RnmnEB6tX_Ic6Gf6EWbJyIa9yZZ2lQwSQFz5UO1vQsw/edit
+global $NUMBERSHEET;
 
 function doAline($theline){
 global $NUMBERSHEET = $NUMBERSHEET +1; 
