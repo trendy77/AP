@@ -34,7 +34,11 @@ class autoTPost
 	{
 	    $config = parse_ini_file('config.ini', true);
 	    if (!isset($config[$identifier])) {
+<<<<<<< .merge_file_a03268
 	        exit("could not find identifier '$identifier'");
+=======
+	        exit("could not find ident");
+>>>>>>> .merge_file_a01112
 	    }
 	    $config = $config[$identifier];
 	    $this->_user = $config['user'];
@@ -42,7 +46,10 @@ class autoTPost
 	    $this->_url = $config['url'];
 	    $this->_author = $config['max_width'];
 		$this->_imgMaxHeight = $config['max_height'];
+<<<<<<< .merge_file_a03268
 		 $this->_imgMaxWidth= $config['$width'];
+=======
+>>>>>>> .merge_file_a01112
 		$this->_path = $config['path'];
 		}
 	/**
@@ -58,7 +65,11 @@ class autoTPost
 		$path = $this->_path;
 		$XmlRpc_result = null;
 		$XmlRpc_client = new IXR_Client ($url);
+<<<<<<< .merge_file_a03268
 		$date = new IXR_Date(strtotime('now') ); // writing publish date
+=======
+		$date = strtotime('now'); 
+>>>>>>> .merge_file_a01112
 		$encoding='UTF-8';
 		//$customfields=array('key'=>'sourceFeed', 'value'=>$source); // Custom field
 		$title = htmlentities($title,ENT_NOQUOTES,$encoding);
@@ -85,7 +96,11 @@ class autoTPost
 		catch (Exception $e){
 		var_dump ( $e->getMessage ());
 		}
+<<<<<<< .merge_file_a03268
 	$image=saveImage($image, $data);
+=======
+	saveImage($image, $data);
+>>>>>>> .merge_file_a01112
 	return ($data);
 	}
 	
@@ -155,8 +170,11 @@ if($upload){
 	{
 	$url = $this->_url;
 	$path = $this->_path;
+<<<<<<< .merge_file_a03268
 		$user = $this->_user;
 		$pass = $this->_pass;
+=======
+>>>>>>> .merge_file_a01112
 	// $filename should be the path to a file in the upload directory.
 	$filename = $image;
 // The ID of the post this attachment is for.

@@ -79,7 +79,11 @@ define('SCOPES', implode(' ', array(
     $accessToken = json_decode(file_get_contents($credentialsPath), true);
   } else {
     $authUrl = $client->createAuthUrl();
+<<<<<<< .merge_file_a15108
     echo("Open the following link in your browser:\n%s\n", $authUrl);
+=======
+    echo("Open the following link in your browser:\n%s\n" $authUrl);
+>>>>>>> .merge_file_a09172
     echo 'Enter verification code: ';
     $authCode = trim(fgets(STDIN));
 

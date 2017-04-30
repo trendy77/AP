@@ -38,20 +38,12 @@ function cron_add_ten( $schedules ) {
     );
     return $schedules;
 }
-<<<<<<< .merge_file_a05292
  $_SESSION['number'];
 
  function repeat() {
       $number = $_SESSION['number'];
       $number++;
     $_SESSION['number'] = $number;
-=======
-
- function repeat() {
-      $number = $_GLOBAL['number'];
-      $number++;
-    $_GLOBAL['number'] = $number;
->>>>>>> .merge_file_a07116
  }
 
 function wpapgpap_authon()
@@ -61,7 +53,6 @@ include_once '/home/ckww/AP/base.php';
 define('APPLICATION_NAME', 'WP-AP');
 define('CREDENTIALS_PATH', '~/.credentials/sheets.googleapis.com-php-quickstart.json');
 define('CLIENT_SECRET_PATH', '/home/ckww/AP/tpausecret.json');
-<<<<<<< .merge_file_a05292
 
 $client = new Google_Client();
  $client->setApplicationName(APPLICATION_NAME);
@@ -113,50 +104,10 @@ include_once '/home/ckww/AP/base.php';
  $client = wpapgpap_authon();
 $service = new Google_Service_Sheets($client);
 $spreadsheetId ="1RnmnEB6tX_Ic6Gf6EWbJyIa9yZZ2lQwSQFz5UO1vQsw";
-=======
-
-$client = new Google_Client();
- $client->setApplicationName(APPLICATION_NAME);
-$client->setScopes(SCOPES);
-$client->setAuthConfig(CLIENT_SECRET_PATH);
- $client->setAccessType('offline');
-// Load previously authorized credentials from a file.
-  $credentialsPath = expandHomeDirectory(CREDENTIALS_PATH);
-  if (file_exists($credentialsPath)) {
-    $accessToken = json_decode(file_get_contents($credentialsPath), true);
-  } else {
-    // Request authorization from the user.
-    $authUrl = $client->createAuthUrl();
-    //echo "Open the following link in your browser:\n%s\n";
-	echo $authUrl ;
-    echo 'Enter verification code: ';
-    $authCode = trim(fgets(STDIN));
-
-    // Exchange authorization code for an access token.
-    $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
-
-    // Store the credentials to disk.
-    if(!file_exists(dirname($credentialsPath))) {
-      mkdir(dirname($credentialsPath), 0700, true);
-    }
-    file_put_contents($credentialsPath, json_encode($accessToken));
-   
-  }
-  $client->setAccessToken($accessToken);
-
-  // Refresh the token if it's expired.
-  if ($client->isAccessTokenExpired()) {
-    $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-    file_put_contents($credentialsPath, json_encode($client->getAccessToken()));
-  }
-  
-$service = new Google_Service_Sheets($client);
->>>>>>> .merge_file_a07116
 
 define('SCOPES', implode(' ', array(
   Google_Service_Sheets::SPREADSHEETS)
 ));
-<<<<<<< .merge_file_a05292
 if (!isset($_SESSION['number'])) {
 $number = 5;
 } else {
@@ -165,30 +116,6 @@ $number = $_SESSION['number'];
 }
 $thesheet = $wpapgetoption['sheet'];
 $range = 'Sheet1!A'.$_SESSION['number']. ':H' . $_SESSION['number'];
-=======
-return $client;
-}
-
-function doAline(){
-	require_once '/home/ckww/AP/vendor/autoload.php';
-include_once '/home/ckww/AP/tPost.php';
-include_once '/home/ckww/AP/base.php';
- $client = wpapgpap_authon();
-$service = new Google_Service_Sheets($client);
-$spreadsheetId ="1RnmnEB6tX_Ic6Gf6EWbJyIa9yZZ2lQwSQFz5UO1vQsw";
-
-define('SCOPES', implode(' ', array(
-  Google_Service_Sheets::SPREADSHEETS)
-));
-if (!isset($_GLOBAL['number'])) {
-$number = 5;
-} else {
-echo 'numbersheet is set @' . $_GLOBAL['number'];
-$number = $_GLOBAL['number'];
-}
-$thesheet = $wpapgetoption['sheet'];
-$range = 'Sheet1!A'.$_GLOBAL['number']. ':H' . $_GLOBAL['number'];
->>>>>>> .merge_file_a07116
 $response = $service->spreadsheets_values->get($spreadsheetId, $range);
 $values = $response->getValues();
 if (count($values) == 0) {
@@ -221,21 +148,14 @@ if (count($values) == 0) {
 			if (is_numeric($resp)){
 			// DELETE OR MOVE ROW....
 			repeat();
-<<<<<<< .merge_file_a05292
 			
 			return $resp;
-=======
-				return $resp;
->>>>>>> .merge_file_a07116
 			} else {
 			// EPIC FAIL....
 			echo 'fail';
 			}
-<<<<<<< .merge_file_a05292
 	
 		return $resp;
-=======
->>>>>>> .merge_file_a07116
 		}
 	
 	}
@@ -260,8 +180,6 @@ function call_api($url){
 $APPLICATION_ID = '4ecd9e16';
 $APPLICATION_KEY='be54f0e53443501357865cbc055538aa';
   $ch = curl_init('https://api.aylien.com/api/v1/' . "hashtags");
-  $ch = curl_init('https://api.aylien.com/api/v1/' . "hashtags");
-  $ch = curl_init('https://api.aylien.com/api/v1/' . "hashtags");
  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     'Accept: application/json',
@@ -275,7 +193,6 @@ $APPLICATION_KEY='be54f0e53443501357865cbc055538aa';
 } 
 
 
-<<<<<<< .merge_file_a05292
 function wpap_gmail_menu()
 {
 	//icon display on side title plugin in leftside
@@ -310,5 +227,3 @@ function tester(){
         </p>
       </form>
     </div>
-=======
->>>>>>> .merge_file_a07116

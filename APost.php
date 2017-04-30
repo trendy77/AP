@@ -1,5 +1,5 @@
 <?php
-require_once ( 'IXRlib.php' );
+require_once ( '/home/ckww/AP/IXRlib.php' );
 
 class autoTPost
 {
@@ -53,15 +53,25 @@ class autoTPost
 $my_post = array(
     'post_title'    => $title,
     'post_content'  => $body,
+<<<<<<< .merge_file_a11116
+=======
+	'post_type' => 'post',
+>>>>>>> .merge_file_a06056
      'post_excerpt'  => $post_excerpt,
 	 'post_status'   => 'publish',
     'post_author'   => 1,
     'post_category' => array( $category )
 	);
  
+<<<<<<< .merge_file_a11116
 	$post_id = wp_insert_post( $my_post, $wp_error );
 	
 	wp_set_post_tags( $post_id, $keywords, 'true' )
+=======
+	$post_id = wp_insert_post( $my_post,'true' );
+	
+	wp_set_post_tags( $post_id, $keywords, 'true' );
+>>>>>>> .merge_file_a06056
 	
 	//wp_set_post_categories( $post_id, $_categories, 'true' );
 	return ($post_id);
@@ -85,10 +95,15 @@ $my_post = array(
              'date_created_gmt' => $date
           );
 //$params = array(1,$user,$pass,$content,true); // set true if you need to publish post, set false if you need set your post as draft
+<<<<<<< .merge_file_a11116
 		$data = $wp_insert_post($content, $wp_error);
 	} catch (Exception $e){
 		var_dump ( $e->getMessage ());
 		}
+=======
+		$data = $wp_insert_post($content, 'true');
+	
+>>>>>>> .merge_file_a06056
 		return ($data);
 	}
 
@@ -187,87 +202,5 @@ return ($attach_id);
 			$width = floor($width * $ratio);
 			$sizeAppend = "-{$width}x{$height}";
 		}
-		/* upload picture
-		$user = $this->_user;
-		$pass = $this->_pass;
-		$data = array(
-			'name' => $filename,
-			'type' => $type,
-			'bits' => new IXR_Base64($filestream)
-		);
-		if (!$this->_client->query('wp.uploadFile', 1, $user, $pass, $data))
-			$this->_displayError("uploading photo $path");
-		$response = $this->_client->getResponse();
-		$imageID = $response['id'];
-		$imageUrl = $response['url'];
-		$fileMeta = $this->_extractFilenameData($imageUrl); // necessary for building image-URL
-		// add title and other data
-		$data = array(
-			'post_title' => $title,
-			'post_excerpt' => $title,
-			'post_content' => $title
-		);
-		if (!$this->_client->query('wp.editPost', 1, $user, $pass, $imageID, $data))
-			$this->_displayError("editing photo $path");
-		// prepare output
-		$titleEscaped = htmlspecialchars($title);
-		$srcFinal = $fileMeta['basepath'] . $fileMeta['basename'] . $sizeAppend . $fileMeta['extension'];
-		$output = "[caption id='attachment_$imageID' align='aligncenter' width='$width']";
-		$output.= "<a href='$imageUrl'>";
-		$output.= "<img class='wp-image-$imageID' title='$titleEscaped' src='$srcFinal' alt='$titleEscaped' width='$width' height='$height' />";
-		$output.= "</a> {$title}[/caption]";
-		return $output;
-	}
-	**
-	 * Returns an image's file' basepath, basename and extension.
-	 * @param string $path	The image's path.
-	 * @return array		Contains basepath, basename and extension.
-	 */
-	private function _extractFilenameData($path)
-	{
-		if ($indexOfLastSlash = strrpos($path, '/')) {
-			$filename = substr($path, $indexOfLastSlash + 1);
-			$basepath = substr($path, 0, $indexOfLastSlash + 1);
-		} else {
-			$filename = $path;
-			$basepath = '';
-		}
-		$indexOfLastDot = strrpos($filename, '.');
-		$basename = substr($filename, 0, $indexOfLastDot);
-		$extension = substr($filename, $indexOfLastDot);
-		return array(
-			'basepath' => $basepath,
-			'basename' => $basename,
-			'extension' => $extension
-		);
-	}
-	/**
-	 * Adds taxonomy items as metadata.
-	 *
-	 * @param string $key
-	 * @param array $data
-	 */
-	private function _addTaxonomyItems($key, $data)
-	{
-		if (isset($this->_postData['terms_names']))
-			$this->_postData['terms_names'][$key] = $data;
-		else
-			$this->_postData['terms_names'] = array($key => $data);
-	}
-	/**
-	 * Displays error message and quits execution.
-	 *
-	 * @param string $position	Position where error occured.
-	 * @param string $msg		The message to display.
-	 */
-	private function _displayError($position, $msg = '')
-	{
-		if (empty($msg)) {
-			$code = $this->_client->getErrorCode();
-			$msg = $this->_client->getErrorMessage();
-		} else
-			$code = '666';
-		echo "Position: $position<br />";
-		exit("An error occurred - $code: $msg");
 	}
 }

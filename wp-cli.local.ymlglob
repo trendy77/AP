@@ -1,0 +1,46 @@
+# core download:
+  # type ``wp help core download`` for options
+
+
+core config:
+  # dbname    dbprefix    
+  # -----------------------------------------------------------------
+  # set       set         -> error  
+  # not set   not set     -> auto create dbname, use default dbprefix
+  # set       not set     -> use dbname, auto generate dbprefix
+  # not set   set         -> auto create dbname, use dbprefix
+
+  dbuser: organ_remote
+  dbpass: mwSwwwwfStHP3as
+  dbhost: 127.0.0.1:3306    # required
+  url: http://es.organisemybiz.com
+  admin_user: elorganise
+  admin_password:arribaarribaFuego
+  dbuser: organ_remote
+  dbpass:mwS)fStHP3as
+  # type ``wp help core config`` for more options
+
+
+core install:
+ url: http://globetravelsearch.com
+ admin_user: trendyTravel
+ admin_password: t0mzdez2!t0mzdez2!
+ path: /home/organ151/public_html/travelsearch
+  # title: [auto generated]
+
+
+tp set:
+ url: http://globetravelsearch.com
+ admin_user: trendyTravel
+ admin_password: t0mzdez2!t0mzdez2!
+ path: /home/organ151/public_html/travelsearch
+  
+tp go:
+ url: http://globetravelsearch.com
+ admin_user: trendyTravel
+ admin_password: t0mzdez2!t0mzdez2!
+ path: /home/organ151/public_html/travelsearch
+  
+# quick install:
+  # domain: .dev      # optional, add this suffix to install directory and url from ``core install``
+  # http_port: 8080   # optional, add port to url from ``core install``
