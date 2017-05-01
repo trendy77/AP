@@ -18,13 +18,13 @@ function ps_get_social_count( $post_id, $flush_cache = false ) {
 	return $like_count;
 }
 
-function ps_get_fb_count($url) {
+function ps_get_fb_count($url, $fbAid, $fbSct) {
 	
 	require 'facebook-sdk/facebook.php';
 
 	$config = array(
-	  'appId'  => FB_APP_ID,
-	  'secret' => FB_APP_SECRET,
+	  'appId'  => $fbAid,
+	  'secret' => $fbSct,
 	  'cookie' => false,
 	);
 

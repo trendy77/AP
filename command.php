@@ -1,33 +1,37 @@
 <?php
 /**
- * Squick WordPress helpers.
+ * APposter
  */
  if ( defined( 'WP_CLI' ) && WP_CLI ) {
-    WP_CLI::add_command( 'tpost', tpPost, array( when =>after_wp_load );
+    WP_CLI::add_command( tpost, tpPost, array( when =>after_wp_load );
 	}
 
 class tpost extends WP_CLI_Command
 {
-   public function go($args, $assoc_args)
-    {
-     /** 
-	
-	
-	
-}
-	
-class tpCLI extends WP_CLI_Command
-{
-    /**
-    * Squickly installs WordPress using config from wp-cli.local.yml and wp-cli.yml
-    *
-    * EXAMPLE
-    *
-    *     wp tp go
-    *		 tp set
-	
-    * @when before_wp_load
-    */
+/**
+* post to WP
+*
+* ## OPTIONS
+*
+* <site>...
+* : The site(s) to post to
+*
+* [--type=<type>]
+* : Whether or not to greet the person with success or error.
+* ---
+* default: success
+* options:
+*   - success
+*   - error
+* ---
+*
+* ## EXAMPLES
+*
+*     wp tp post
+*
+* @when before_wp_load
+*/
+
     public function go($args, $assoc_args)
     {
      /**
