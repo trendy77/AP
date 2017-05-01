@@ -53,21 +53,18 @@ class autoTPost
 $my_post = array(
     'post_title'    => $title,
     'post_content'  => $body,
-<<<<<<< .merge_file_a11116
-=======
+
 	'post_type' => 'post',
->>>>>>> .merge_file_a06056
      'post_excerpt'  => $post_excerpt,
 	 'post_status'   => 'publish',
     'post_author'   => 1,
     'post_category' => array( $category )
 	);
- 
-<<<<<<< .merge_file_a11116
+
 	$post_id = wp_insert_post( $my_post, $wp_error );
 	
 	wp_set_post_tags( $post_id, $keywords, 'true' )
-=======
+
 	$post_id = wp_insert_post( $my_post,'true' );
 	
 	wp_set_post_tags( $post_id, $keywords, 'true' );
@@ -101,7 +98,7 @@ $my_post = array(
 		var_dump ( $e->getMessage ());
 		}
 =======
-		$data = $wp_insert_post($content, 'true');
+	
 	
 >>>>>>> .merge_file_a06056
 		return ($data);
