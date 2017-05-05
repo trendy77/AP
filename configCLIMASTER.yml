@@ -1,0 +1,98 @@
+# GLOBAL VARIABLES AND ALIAS' FOR SITES ACROSS NETWORK
+core config:
+  dbuser: organ_remote
+  dbpass: mwSwwwwfStHP3as
+  dbhost: 127.0.0.1
+  
+
+tp go:
+  path: /home/organ151/public_html'
+  url: https://organisemybiz.com
+  admin_user: theCreator
+  admin_password: t0mzdez2!
+  admin_email: completelybogusemail@organisemybiz.com
+tp set:
+  
+tp post:
+
+# main domain public_html
+color: true
+disabled_commands:
+	-db drop 
+
+core install:
+  dbuser: organ_remote
+  dbpass: mwS)fStHP3as
+
+tp post:
+	sheetId: 				# default in case!
+tp go:
+	plugin_list: /home/organ151/Scripts/plug/plugin.txt 
+tp move:
+
+tp set:
+   plugins_list: /home/organ151/Scripts/plug/plugin.txt
+
+require:
+ - /home/organ151/Scripts/command.php
+ 
+# Aliases to other WordPress installs (e.g. `wp @staging rewrite flush`)
+# An alias can include 'user', 'url', 'path', 'ssh', or 'http'
+@ckwwes:
+  user: trendinho
+  url: http://es.customkitsworldwide.com
+  ssh: ckww@customkitsworldwide.com/es
+  admin_user: customkits
+  identifier: ckwwes
+@ckww:
+  user: customkits
+  url: http://customkitsworldwide.com
+  ssh: ckww@customkitsworldwide.com/public_html
+  admin_user: trendinho
+  identifier: ckww
+@gov:
+  url: http://govnews.info
+  user: govfeed
+  path: /home/organ151/public_html/govnews
+  identifier: gov
+@vape:
+  url: http://vapedirectory.co
+  user: trendyVape
+  path: /home/organ151/public_html/vapedirectory
+  identifier: vape
+@orgbizes:
+  url: http://es.organisemybiz.com
+  user: elorganise
+  path: /home/organ151/public_html/es
+  identifier: orgbizes  
+@orgbiz:
+  url: http://organisemybiz.com
+  user: headlines
+  path: /home/organ151/public_html
+  identifier: orgbiz
+@glo
+  url: http://globetravelsearch.com
+  user: trendyTravel
+  path: /home/organ151/public_html/travelsearch
+  identifier: glo
+@tp:
+  user: theCreator
+  path: /home/organ151/public_html/trendypublishing
+  url: http://trendypublishing,com
+  identifier: tp
+@tpau:
+  user: theCreator
+  path: /home/organ151/public_html/au
+  url: http://trendypublishing,com.au
+  identifier: tpau
+@fnr:
+  user: theCreator
+  path: /home/organli6/public_html
+  url: http://fakenewsregistry.org
+  ssh: organli6@fakenewsregistry.org
+  identifier: fnr
+@fnres:
+  user: theCreator
+  path: /home/organli6/public_html/es
+  url: http://fakenewsregistry.org/es
+  identifier: fnres
