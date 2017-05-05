@@ -1,74 +1,100 @@
 <?php
-/**
- * APposter
- */
- if ( defined( 'WP_CLI' ) && WP_CLI ) {
-    WP_CLI::add_command( tpost, tpPost, array( when =>after_wp_load );
+
+class tpCLI extends WP_CLI_Command
+{
+	///*** THE TPCLi COMMAND SET
+	
+	//   WP TP GO  -- INSTALL SITE TO 'SITE_PATH
+	     ///   --- CLEAN UP STARTER PLUGS AND THEMES, INSTALL DB, PLUGINS 
+	// WP TP SET -- PLUGS INSTALL AND CLEAN-UP
+	// WP TP POST -- POSTS A MOTHA-FUCKING POST, MOTHA-FUCKER.
+	// WP TP 
+	
+public function go ($args, $assoc_args){
+ /**
+    installs wp, database, pplugs, etc
+ *
+	 * ## OPTIONS
+	 *
+	 * <dest>
+	 * : The destination for the new WordPress install.
+	 *
+	 * [--path=<path>]
+	 * : Optional path to the installation.
+	 *
+	 * [--url=<url>]
+	 * :URL of the site
+	 *
+	 * [--multisite]
+	 * : Convert the install to a Multisite installation.
+	 *
+	 * [--dbuser=<user>]
+	 * : Database username
+	 *
+	 * [--dbpass=<pass>]
+	 * : Database password
+	 *
+	 * [--dbhost=<host>]
+	 * : Database host
+	 *
+	 * [--admin_user]
+	 * : Admin username
+	 *
+	 * [--admin_password]
+	 * : Admin password
+	 *
+	 * [--admin_email]
+	 * : Admin email
+	 *
+	 * [--after_script]
+	 * : Custom script to run after install
+	 *
+     * ## EXAMPLES
+        *   wp tp post
+       *
+         * @when before_wp_load
+        */
+	public function install( $args, $assoc_args ) {
+		$path = isset( $assoc_args['path'] ) ? $assoc_args['path'] : getcwd();
+		//$site_path = $path . '/' . $args[0];
+		$dbuser    = $assoc_args['dbuser'];
+		$dbpass    = $assoc_args['dbpass'];
+		$dbhost    = $assoc_args['dbhost'];
+		 if (empty($assoc_args['dbhost'])) {
+            $assoc_args['dbhost'] = '127.0.0.1';
+		$dbname = str_replace( '.', '_', $args[0] );
+		  $config = \WP_CLI::get_runner()->config;
+        $extra_config = \WP_CLI::get_runner()->extra_config;
+		// Download WordPress
+		$download = "wp core download --path=%s";
+		WP_CLI::log( 'Downloading WordPress...' );
+		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( $download, $path ) );
+ 		// Create the wp-config file
+ 		$config = "wp --path=%s core config --dbname=%s --dbuser=%s --dbpass=%s --dbhost=%s";
+ 		WP_CLI::log( 'Creating wp-config.php...' );
+    	WP_CLI::launch( \WP_CLI\Utils\esc_cmd( $config, $site_path, $dbname, $dbuser, $dbpass, $dbhost ) );
+		// Create the database
+		$db_create = "wp --path=%s db create";
+		WP_CLI::log( 'Creating the database...' );
+		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( $db_create, $site_path ) );
+		// Install WordPress core.
+		$admin_user  = $assoc_args['admin_user'];
+		$admin_pass  = $assoc_args['admin_password'];
+		$admin_email = $assoc_args['admin_email'];
+		$subcommand  = 'install';
+		$base_url    = $assoc_args['url'];
+		if ( isset( $assoc_args['multisite'] ) ) {
+			$subcommand = 'multisite-install';
+		}
+		$core_install = "wp --path=%s core %s --url=%s --title=%s --admin_user=%s --admin_password=%s --admin_email=%s";
+		WP_CLI::log( 'Installing WordPress...' );
+		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( $core_install, $site_path, $subcommand, 'https://' . $args[0], $args[0], $admin_user, $admin_pass, $admin_email ) );
+		if ( isset( $assoc_args['after_script'] ) ) {
+			WP_CLI::launch( $assoc_args['after_script'] . ' ' . $args[0] . '&>/dev/null' );
+		}
+		WP_CLI::success( "WordPress installed at $site_path" );
 	}
 
-class tpost extends WP_CLI_Command
-{
-/**
-* post to WP
-*
-* ## OPTIONS
-*
-* <site>...
-* : The site(s) to post to
-*
-* [--type=<type>]
-* : Whether or not to greet the person with success or error.
-* ---
-* default: success
-* options:
-*   - success
-*   - error
-* ---
-*
-* ## EXAMPLES
-*
-*     wp tp post
-*
-* @when before_wp_load
-*/
-
-    public function go($args, $assoc_args)
-    {
-     /**
-     * setup WP
-     *
-     * ## OPTIONS
-     *
-     * <site>...
-     * : The site(s) to setup.
-     *
-     * [--type=<type>]
-     * : Whether or not to greet the person with success or error.
-     * ---
-     * default: success
-     * options:
-     *   - success
-     *   - error
-     * ---
-     *
-     * ## EXAMPLES
-     *
-     *     wp tp post
-     *
-     * @when before_wp_load
-     */
-	 $rescue_directory = getcwd();
-        // Get config
-        $config = \WP_CLI::get_runner()->config;
-        // get extra config
-        $extra_config = \WP_CLI::get_runner()->extra_config;
-        // 1) download ...
-        WP_CLI::run_command(array('core', 'download'));
-        // 2) create database ...
-        $db_config = $extra_config['core config'];
-        if (empty($db_config['dbhost'])) {
-            $db_config['dbhost'] = '127.0.0.1';
-        }
         $mysqli = new mysqli($db_config['dbhost'], $db_config['dbuser'], $db_config['dbpass']);
         if (! $mysqli) {
             WP_CLI::error(
@@ -86,134 +112,50 @@ class tpost extends WP_CLI_Command
             WP_CLI::error(sprintf("Unable to create new schema '%s'.", $db_config['dbname']));
             return;
         }
-        $mysqli->close();
-        WP_CLI::success(sprintf("Created '%s' database.", $db_config['dbname']));
-        // 3) config ...
-        WP_CLI::run_command(array('core', 'config'));
-        // 4) install ..
-        echo exec('wp core install')."\n";
-        // 5) Remove default plugins and themes
-        WP_CLI::line('Deleting list of skipped plugins...');
-        foreach ($config['skip-plugins'] as $plugin) {
-            echo exec('wp plugin delete '.$plugin)."\n";
-        }
-        // 6) plugin install
-        WP_CLI::line('Installing list of plugins...');
-        foreach ($extra_config['plugin install'] as $plugin) {
-            echo exec('wp plugin install '.$plugin. ' --activate')."\n";
-        }
-        // 7) Activate theme and delete others
-        WP_CLI::line('Activating theme name...');
-        echo exec('wp theme activate '.$extra_config['theme-name'])."\n";
-        WP_CLI::line('Deleting list of skipped themes...');
-        foreach ($config['skip-themes'] as $theme) {
-            echo exec('wp theme delete '.$theme)."\n";
-        }
-        chdir($rescue_directory);
-        if (isset($config['url'])) {
-            WP_CLI::launch('open ' . $config['url']);
-        }
+        $mysqli->close();        WP_CLI::success(sprintf("Created '%s' database.", $db_config['dbname']));
+        
+       
     }
-		
-	 public function set($args, $assoc_args)
-    {
-     /**
- * Add plugins from the provided file.
- * 
- * ## OPTIONS
- *
- * <dest>
- * : The site to add plugins to.
- *
- * [--plugin_list]
- * : The path to the file containing the list of plugins to install.
- *
- *[--path]
- * : The path to the file containing the list of plugins to install.
- **
- *
- * @when after_wp_load
- */   
- // site to do this time
-       $rescue_directory = getcwd();
-        // Get config
-        $config = \WP_CLI::get_runner()->config;
-   // get extra config
-        $extra_config = \WP_CLI::get_runner()->extra_config;
-        // 1) plugin instal
-	 $path = isset( $assoc_args['path'] ) ? $assoc_args['path'] : getcwd();
-		WP_CLI::log( 'Removing extra themes...' );
-		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( 'wp --path=%s theme delete twentyfifteen', $path ) );
-		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( 'wp --path=%s theme delete twentysixteen', $path ) );
-		WP_CLI::log( 'Removing default plugins...' );
-		
-		if ( isset( $assoc_args['plugin_list'] ) && file_exists( $assoc_args['plugin_list'] ) ) {
-			$plugins = file_get_contents( $assoc_args['plugin_list'] );
-			$plugins = array_filter( explode( PHP_EOL, $plugins ) );
-			foreach ( $plugins as $plugin ) {
-				$cmd = 'wp --path=%s plugin install %s';
-				$cmd = \WP_CLI\Utils\esc_cmd( $cmd, $path, $plugin );
-				$result = WP_CLI::launch( $cmd, false, true );
-				WP_CLI::log( $result );
-			}
-		} else {
-			WP_CLI::log( 'Plugin list not found' );
-		}
-		echo exec('wp --path=%s plugin status')."\n";
-        }
-	 public function post($args, $assoc_args)
-    {
-     /**
- *post a post to WP.
- * 
- * ## OPTIONS
- *
- * <dest>...
- * : The site to post to
- *
- * [--identifier]
- * : The id for the site to post to 
- *
- *[--path]
- * : The path to the file containing the install.
- *
- *[--$category] 
- * : category
- *
- * [--$title]
- * : title
- * [--$keywords]
- * : tags
- * [--$post_excerpt]
- * : excerpt
- * [--$body]
- * : body
- * [-- $image]
- *  : img or not
- *[--admin_pass]
- * : user pass
- *
- *[--url]
- * : url of site
- *
- * @when after_wp_load
- */   
-      $config = \WP_CLI::get_runner()->config;
-   // get extra config
-        $extra_config = \WP_CLI::get_runner()->extra_config;
-    if (!isset($assoc_args['$identifier'])) {
-		echo 'error';
-	}
-	else {
-		$this->_identifier = ($assoc_args['$identifier']);
-	$this->_path =  ($assoc_args['path']);
-	 $this->_user = ($assoc_args['admin_user']);
-    $this->_pass =  ($assoc_args['admin_pass']);
-    $this->_title =  ($assoc_args['title']);   
-	$this->_body =  ($assoc_args['body']);   
-	$this->_tags =  ($assoc_args['tags']);
 	
+	 public function post($args, $assoc_args){
+		// require_once '/vendor/autoload.php';
+			//include '/home/organ151/Scripts/base.php';
+	
+
+
+	/**
+			* post an article programmatically
+			* wp tp post 
+		* ## OPTIONS
+		* <path>
+		* 
+		* [--number=<number>]
+     * : number of lines to parse and post
+	 * [--sheet=<spreadsheetId>]
+     * : spreadsheet to parse from
+	 * ---
+     * default: success
+     * options:
+     *   - success
+     *   - error
+     * ---
+     *
+     * ## EXAMPLE
+     *  wp @es tp post --number=2 
+     *
+     * @when after_wp_load
+
+define('SCOPES', implode(' ', array(
+  Google_Service_Sheets::SPREADSHEETS))); //https://www.googleapis.com/auth/drive https://spreadsheet‌​s.google.com/feeds]‌​)));
+define('APPLICATION_NAME', 'My Project');
+define('CREDENTIALS_PATH', '~/.credentials/sheets.googleapis.json');
+define('CLIENT_SECRET_PATH', 'cs.json');
+// If modifying these scopes, delete your previously saved credentials
+// at ~/.credentials/sheets.googleapis.com-php-quickstart.json
 	const DELIMITER = '|';
+	/**
+	 * internals
+	 */
 	private $_client;
 	private $_title;
 	private $_content;
@@ -221,36 +163,137 @@ class tpost extends WP_CLI_Command
 	private $_categories;
 	private $_excerpt;
 	private $_postData = array();
-		   
-	 foreach ($values as $row) {
-	   $title=$row[0];
-    	$body=$row[1];
-    	$articleUrl=$row[2];
-    	$category=$row[3].$row[4];
-    	$image=$row[5];
-	    $identifier = $row[6];
-	    $keywords=$row[7];
-		}
-		$catIds = array();
-		foreach ($category as $cat) {
-		    $idObj = get_category_by_slug($cat);
-		    $zid = $idObj->term_id;
-		    array_push($catIds, $zid);
-		  }	
-			if ($keywords == null){
-			 $keywords = get_hashTags($articleUrl);
-			 } 
-	       	$post_excerpt=strip_tags($row[1]);	
-	$my_post = array(
+	/**
+	 * Creates a client instance for XML-RPC requests and sets the post's
+	 * initial content.
+	 *
+	 * @param string $htmlString	Sets the post's initial content.
+	 * @param string $identifier	Fetches the correct set of config data.
+	 */
+	
+	    $config = parse_ini_file('config.ini', true);
+	    if (!isset($config[$identifier])) {
+	        var_dump($config);
+	        echo"could not find identifier" .'$identifier';
+			} else {
+			$config = $config[$identifier];
+			$this->_user = $config['user'];
+			$this-> _pass = $config['pass'];
+			$this->_url = $config['url'];
+			$this->_path = $config['path'];
+			$this->_identifier = $config['identifier'];
+			}
+
+	public function getSheet(){
+$config = \WP_CLI::get_runner()->config;
+       $extra_config = \WP_CLI::get_runner()->extra_config;
+			if (!isset( $assoc_args['identifier'] )){
+				WP_CLI::log( 'Error ID not found!' );
+			} else { 
+ 
+
+$curlUrl = $siteUrl . '/wp-json/wp/v2/posts';
+
+$ curl -X OPTIONS -i $curlUrl 
+
+
+
+ if ($keywords == null){
+						$keywords = get_hashTags($articleUrl);
+					} 
+					$post_excerpt=strip_tags($row[1]);	
+					$my_post = array(
 						'post_title' => $title,
 						'post_content' => $body,
 						'post_status' => 'publish',
 						'post_author' => 1,
-						'post_category' => $catIds
-				);
-		$postId = wp_insert_post( $my_post );
-  echo $postId;
+						'post_category' => array ($catIds)
+						);
+	echo 'post ID is '; 
+	echo $postId = wp_insert_post( $my_post );
+			if (is_numeric($postId)){
+			$file= $path."/success.txt";
+			$linefile = $path."/line.txt";
+			$woohoo = '/n'.$postId;
+			$getline=$getline++;
+		file_put_contents($file, $woohoo, FILE_APPEND | LOCK_EX);
+		 file_put_contents($linefile,$getline);
+		 $valueInputOption = 'RAW';
+			$values = array(  array( $postId	),
+								// Additional rows ...
+							);
+			$body = new Google_Service_Sheets_ValueRange(array('values' => $values	));
+				$params = array(  'valueInputOption' => $valueInputOption	);
+			$result = $service->spreadsheets_values->update($spreadsheetId, $range2, $body, $params);
+	    	} else {
+			echo 'failed.';
+			}
+		} 
 	}
 	}
+	}
+	 public function set($args, $assoc_args){
+       /**
+     * setup WP
+     *sets all the plugins and theme info for my sites
+     * ## OPTIONS
+     *
+     * <site>...
+     * : The site(s) to setup. ie foldername
+     *
+     * [--path=<path>]
+     * : path to site
+     *
+	 * [--plugin_list=<plugin_list>]
+     * : path to plugin txt file
+     * ---
+     * default: success
+     * options:
+     *   - success
+     *   - error
+     * ---
+     *
+     * ## EXAMPLES
+     *
+     *     wp tp set 
+     *
+     * @when before_wp_load
+     */ 
+       $config = \WP_CLI::get_runner()->config;
+       $extra_config = \WP_CLI::get_runner()->extra_config;
+	
+	 $(wp eval 'foreach( get_posts(array("category" => 2,"fields" => "ids")) as $id ) { echo get_post_thumbnail_id($id). " "; }');
+	
 
+	WP_CLI::log( 'Error ID not found!' );
+			} 
+			else { 
+				$id = $assoc_args['identifier'];
+ $path = isset( $assoc_args['path'] ) ? $assoc_args['path'] : getcwd();
+	
+	WP_CLI::log( 'Removing extra themes...' );
+		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( 'wp --path=%s theme delete twentyfifteen', $path ) );
+		WP_CLI::launch( \WP_CLI\Utils\esc_cmd( 'wp --path=%s theme delete twentysixteen', $path ) );
+	WP_CLI::log( 'Removing transients & regen any lost pics...' );
+	WP_CLI::launch( \WP_CLI\Utils\esc_cmd( 'wp --path=%s transient delete --all', $path ) );
+	WP_CLI::launch( \WP_CLI\Utils\esc_cmd( 'wp --path=%s media regenerate --only-missing --yes', $path ));
+		
+//   WP_CLI\Utils\report_batch_operation_results( $noun - eg plugin, $verb - whats doin, 8, $successes, $failures )
+	WP_CLI::log( 'ADDING default plugins...' );	
+		if ( isset( $assoc_args['plugin_list'] ) && file_exists( $assoc_args['plugin_list'] ) ) {
+			$plugins = file_get_contents( $assoc_args['plugin_list'] );
+			$plugins = array_filter( explode( PHP_EOL, $plugins ) );
+				foreach ( $plugins as $plugin ) {
+					$cmd = 'wp @%s --path=%s plugin install %s';
+					$cmd = \WP_CLI\Utils\esc_cmd( $cmd, $id, $path, $plugin );
+					$result = WP_CLI::launch( $cmd, false, true );
+					WP_CLI::log( $result );
+				} 
+			echo exec('wp --path%s plugin status', $path )."\n";
+			} else {
+				WP_CLI::log( 'Plugin list not found' );
+					}
+				}
+			}
+	}
 WP_CLI::add_command('tp', 'tpCLI');
