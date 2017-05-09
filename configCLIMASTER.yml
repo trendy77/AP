@@ -25,7 +25,7 @@ core install:
   dbpass: mwS)fStHP3as
 
 tp post:
-	sheetId: 				# default in case!
+	sheetId: 			
 tp go:
 	plugin_list: /home/organ151/Scripts/plug/plugin.txt 
 tp move:
@@ -34,7 +34,7 @@ tp set:
    plugins_list: /home/organ151/Scripts/plug/plugin.txt
 
 require:
- - /home/organ151/Scripts/command.php
+ - /home/organ151/Scripts/command2.php
  
 # Aliases to other WordPress installs (e.g. `wp @staging rewrite flush`)
 # An alias can include 'user', 'url', 'path', 'ssh', or 'http'
@@ -44,55 +44,58 @@ require:
   ssh: ckww@customkitsworldwide.com/es
   admin_user: customkits
   identifier: ckwwes
+  path: /home/ckww/public_html/es
 @ckww:
   user: customkits
   url: http://customkitsworldwide.com
   ssh: ckww@customkitsworldwide.com/public_html
   admin_user: trendinho
   identifier: ckww
+  path: /home/ckww/public_html/
 @gov:
   url: http://govnews.info
   user: govfeed
   path: /home/organ151/public_html/govnews
   identifier: gov
+    
 @vape:
-  url: http://vapedirectory.co
-  user: trendyVape
+  url: https://vapedirectory.co
+  user: trendyvape
   path: /home/organ151/public_html/vapedirectory
   identifier: vape
 @orgbizes:
-  url: http://es.organisemybiz.com
+  url: https://es.organisemybiz.com
   user: elorganise
   path: /home/organ151/public_html/es
   identifier: orgbizes  
 @orgbiz:
-  url: http://organisemybiz.com
+  url: https://organisemybiz.com
   user: headlines
   path: /home/organ151/public_html
   identifier: orgbiz
 @glo
-  url: http://globetravelsearch.com
+  url: https://globetravelsearch.com
   user: trendyTravel
   path: /home/organ151/public_html/travelsearch
   identifier: glo
 @tp:
   user: theCreator
   path: /home/organ151/public_html/trendypublishing
-  url: http://trendypublishing,com
+  url: https://trendypublishing,com
   identifier: tp
 @tpau:
   user: theCreator
   path: /home/organ151/public_html/au
-  url: http://trendypublishing,com.au
+  url: https://trendypublishing,com.au
   identifier: tpau
 @fnr:
   user: theCreator
   path: /home/organli6/public_html
-  url: http://fakenewsregistry.org
+  url: https://fakenewsregistry.org
   ssh: organli6@fakenewsregistry.org
   identifier: fnr
 @fnres:
   user: theCreator
   path: /home/organli6/public_html/es
-  url: http://fakenewsregistry.org/es
+  url: https://fakenewsregistry.org/es
   identifier: fnres

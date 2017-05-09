@@ -1,11 +1,10 @@
 <?php
 
-require_once '/home/organ151/Scripts/vendor/autoload.php';
 
 putenv('GOOGLE_APPLICATION_CREDENTIALS=/organ151/.credentials/MAYoAuth-4770763c0fae.json');
 $client = new Google_Client();
 $client->useApplicationDefaultCredentials();
-
+$client->setScopes(['https://www.googleapis.com/auth/spreadsheets']);
 $service = new Google_Service_Sheets($client);
 	$sheetId = '1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4';
 		
@@ -13,7 +12,7 @@ $service = new Google_Service_Sheets($client);
 			if (!isset($spreadsheetId)){
 	$sheetId = '1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4';		
 			} 
-		$getline=file_get_contents('line.txt',NULL,NULL,0,4) 
+		$getline=file_get_contents('line.txt',NULL,NULL,0,4);
 		if (!isset($getline)){
 		$getline=2;
 		}
