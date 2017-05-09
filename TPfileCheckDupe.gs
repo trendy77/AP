@@ -1,22 +1,36 @@
 ///// finds all spreadsheets in GDrive....
 
 function fileInterateTP(){
-var overview = SpreadsheetApp.openById('1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4'); var newSH = overview.getSheetByName("MASTERTP");
-newSH.clearContents();
+var overview = SpreadsheetApp.openById('1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4'); 
+var newSH = overview.getSheetByName("MASTERTP");
+var newLog = overview.getSheetByName("LOGS");
 var files = DriveApp.searchFiles('mimeType = "' + MimeType.GOOGLE_SHEETS + '"'); 
   while (files.hasNext()) {
    var spreadsheet = SpreadsheetApp.open(files.next());
-checkItTP(spreadsheet);
+var boo = checkItTP(spreadsheet);
+if (boo == 0){
+newLog.AppendRow('iterateTP: found not new');
+} else if (boo == 1){
+var ggnew = true;
+newLog.AppendRow('iterateTP: found new');
+}
+var dupe =  filedupCheck(spreadsheet); 
+newLog.AppendRow('iterateTP: found ' +dupe + 'in '+ spreadsheet);
 }
 }
 
 function checkItTP(spreadsheet){
 var ssid= spreadsheet.getId(); var nam= spreadsheet.getName();var url= spreadsheet.getUrl();
  var lil = ([nam,ssid,url]);
-var overview = SpreadsheetApp.openById('1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4'); var newSH = overview.getSheetByName("MASTERTP");
-newSH.appendRow(lil);
-  return;
- }
+var overview = SpreadsheetApp.openById('1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4'); var newSH = overview.getSheetByName("MASTERTP"); var check = newSH.getRange(1, 2, newSH.getMaxRows()-1, 1)
+for (var t = 0; t<newSH.getMaxRows();t++){
+        if (ssid == check[t]){
+        return 1;
+        }
+    newSH.appendRow(lil);
+    return 0;
+   }
+   }
   
 function feedrTP(){
  var t1 = new Date();
@@ -47,20 +61,16 @@ var t2 = new Date();
 timeReport(t1,t2);
 }
 
-function filedupCheck(sheetTarg){
-  Logger.log(sheetTarg);var t4=new Date();
-  var spreadsheet = SpreadsheetApp.openById(sheetTarg);
-    var ssid = spreadsheet.getId();    var url = spreadsheet.getUrl();
- var sheet = spreadsheet.getSheetByName("Sheet1");
-  var name = spreadsheet.getName();
- if (sheet== null){
- return;
- } else {
+function filedupCheck(spreadsheet){
+  var t4=new Date();
+ 
+  var sheet = spreadsheet.getSheetByName("Sheet1");
  var data = sheet.getDataRange().getValues();           
    var newData = new Array();       
    var diff = 0;           
    for(i in data){
-     var row = data[i];    
+     var row = data[i];   
+     }
      var duplicate = false;                
     for(j in newData){                            
   if(row[0] == newData[j][0] || row[2] == newData[j][2]){
@@ -70,13 +80,12 @@ function filedupCheck(sheetTarg){
     if(!duplicate){
       newData.push(row);
       }
-    }  
-    sheet.clearContents();  
+     sheet.clearContents();  
     sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
     diff = (data.length-newData.length);
   var t5=new Date();
-   Logger.log('found ' +diff + 'in ');
+  
    timeReport(t4,t5);
 return diff;
  }
-}
+
