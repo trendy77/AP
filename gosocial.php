@@ -1,7 +1,7 @@
 <?php
 $url = home_url();
 
-if (($url === 'http://organisemybiz.com') || ($url === 'http://es.organisemybiz.com')){
+if (($url === 'https://organisemybiz.com') || ($url === 'https://es.organisemybiz.com')){
 echo "<span>Get the latest news @socialMedia </span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/organisemybiz"><span>Twitter</span></a></li>
@@ -10,7 +10,7 @@ echo "<span>Get the latest news @socialMedia </span>
 		<li><a class="sm-instagram" href="https://www.instagram.com/organisemybiz/"><span>Instagram</span></a></li>
 		</ul>";
 		return;
-	} else if ($url === 'http://vapedirectory.co'){
+	} else if ($url === 'https://vapedirectory.co'){
 	echo "<span>Get the latest news @socialMedia</span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/vapedirectoryau/"><span>Twitter</span></a></li>
@@ -19,7 +19,7 @@ echo "<span>Get the latest news @socialMedia </span>
 		<li><a class="sm-instagram" href="https://www.instagram.com/vapedirectory/"><span>Instagram</span></a></li>
 		</ul>";
 		return;
-	} else if ($url === 'http://globetravelsearch.com'){
+	} else if ($url === 'https://globetravelsearch.com'){
 	echo "<span>Get the latest news @socialMedia</span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/globetravel/"><span>Twitter</span></a></li>
@@ -28,7 +28,7 @@ echo "<span>Get the latest news @socialMedia </span>
 		<li><a class="sm-instagram" href="https://www.instagram.com/globetravelsearch/"><span>Instagram</span></a></li>
 		</ul>";
 		return;
-	} else if ($url === 'http://vapedirectory.co'){
+	} else if ($url === 'https://vapedirectory.co'){
 	echo "<span>Get the latest news @socialMedia</span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/vapedirectoryau/"><span>Twitter</span></a></li>
@@ -37,7 +37,7 @@ echo "<span>Get the latest news @socialMedia </span>
 		<li><a class="sm-instagram" href="https://www.instagram.com/vapedirectory/"><span>Instagram</span></a></li>
 		</ul>";
 		return;
-	} else if ($url ===  'http://customkitsworldwide.com') || ($url === 'http://es.customkitsworldwide.com')){
+	} else if ($url ===  'https://customkitsworldwide.com') || ($url === 'https://es.customkitsworldwide.com')){
 	echo "<span>Get the latest news @socialMedia</span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/customkitworldwide"><span>Twitter</span></a></li>
@@ -46,7 +46,7 @@ echo "<span>Get the latest news @socialMedia </span>
 		<li><a class="sm-instagram" href="https://www.instagram.com/customkitworldwide/"><span>Instagram</span></a></li>
 		</ul>";
 	return;
-	} else if(($url ===  'http://fakenewsregistry.org') || ($url === 'http://fakenewsregistry.org/es')){
+	} else if(($url ===  'https://fakenewsregistry.org') || ($url === 'https://fakenewsregistry.org/es')){
 		echo "<span>Get the latest news @socialMedia</span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/news_sans_fact"><span>Twitter</span></a></li>
@@ -55,7 +55,7 @@ echo "<span>Get the latest news @socialMedia </span>
 		<li><a class="sm-instagram" href="https://www.instagram.com/fakenewsregistry"><span>Instagram</span></a></li>
 		</ul>";
 	return;
-	} else if ($url === 'http://govnews.info'){
+	} else if ($url === 'https://govnews.info'){
 	echo "<span>Get the latest news @socialMedia</span>
 		<ul class="social-media footer-social">
 		<li><a class="sm-twitter" href="https://www.twitter.com/vapedirectoryau/"><span>Twitter</span></a></li>
