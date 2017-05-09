@@ -2,40 +2,41 @@
 //////   start ---> strtTEMPLT(line,id)  ----> sheetset(id of sheet)  ----->duplisheet ---->
 
 
-function start(id){ // open overview
-   var url = 'https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit#gid=0';
+function start(){
+  var url = 'https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit#gid=0';
    var ov= SpreadsheetApp.openByUrl(url);
-           
-  var sum= ov.getSheetByName("LIVE");
- // var identi = sum.getRange(line,1,1,3);
-//startTMPLT(3,'1JrTSkbWDYmOxEYIJDgoZj2MRLlfa-BZ1Mk6tvD4cMNs');
+     var dest = ov.getSheetByName("LIVE");
+var range = dest.getRange(2, 3,7,1).getValues();
+for (var line =2; line < range.length;line++){
+var id = range[line];
+  startTMPLT(line,id);
+}
 }
 
 function startTMPLT(line,id){
 var ss = SpreadsheetApp.openById(id);
-var sheet = ss.getSheetByName("Sheet1");
-          /// what number on master am I? @ 10th row, 1st line?
-          // how many lines are in me? --- set to K?
+var sheet = ss.getSheetByName("Sheet1"); 
  sheetSet(id);
+  
   if( line == 2){
     fnr(line);
 } if (line == 3){
-
+  ckww(line);
 }
   if (line == 4){
-  
+  vape(line);
   }
     if( line == 5){
-      
+     gov(line); 
     }
       if( line == 6){
-        
+        glo(line);
       }
         if( line == 7){
-          
+        orgbiz(line);  
         }
           if( line == 8){
-            
+            ckwwes(line);
           }
 }
   function sheetSet(id) {
@@ -68,41 +69,66 @@ return;
   }
 
 function ckww(index){
-var line =index;var site='https://customkitsworldwide.com'; var id = 'ckww'; var siteT = 'CustomKitsWorldwide';var siteTE='Noticias-del-Equipacion Futbol';var siteE='es.customkitsworldwide.com';  
-var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0; var ides='ckwwes';
-var newID = {site: site, siteE:siteE, siteTE:siteTE, siteT: siteT,line:line, id:id, sent:sent,sentE:sentE,sucE:sucE,suc:suc,fail:fail,failE:failE};
+// open sheet 
+ 
+var line =index;
+var site='https://customkitsworldwide.com'; 
+var id = 'ckww'; var siteT = 'CustomKitsWorldwide';  var id='ckwwes';
+var suc=0;var fail=0; var sent=0; 
+var newID = {site: site, ssiteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
   var ScriptProperties = PropertiesService.getScriptProperties();
   ScriptProperties.setProperties(newID);
   return line;
 }
 function gov(index){
-var line =index;var site = 'http://govnews.info'; var siteT = 'GovNews';var siteTE=0; var id = 'gov'; var suc=0;var sucE=0;var siteE = 0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='ides';
+var line =index;var site = 'https://govnews.info'; var siteT = 'GovNews';var siteTE=0; var id = 'gov'; var suc=0;var sucE=0;var siteE = 0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='ides';
 var newID = {site: site, siteE:siteE, siteTE:siteTE, siteT: siteT,line:line, ides:ides,  id:id, sent:sent,sentE:sentE,sucE:sucE,suc:suc,fail:fail,failE:failE};
   var ScriptProperties = PropertiesService.getScriptProperties();
   ScriptProperties.setProperties(newID);
   return line;
 }
 function vape(index){
-var line =index; var site = 'http://vapedirectory.co';  var siteT = 'VapeDirectory';  var id = 'vape';     
+var line =index; var site = 'https://vapedirectory.co';  var siteT = 'VapeDirectory';  var id = 'vape';     
 var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0;var siteTE=0; var siteE=0; 
 var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
   var ScriptProperties = PropertiesService.getScriptProperties();
   ScriptProperties.setProperties(newID);
 return line;
 }
-function orgbiz(index){
-var site = 'https://organisemybiz.com';  var line =index; var siteT = 'OrganiseMyBiz';    var id = 'orgbiz'; var siteTE = 'Organizar-Mi-Noticias'; var siteE = 'https://organisemybiz.com/es';
-var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='orgbizes';
-var newID = {site: site, siteE:siteE, siteTE:siteTE, siteT: siteT,line:line, id:id,ides:ides, sent:sent,sentE:sentE,sucE:sucE,suc:suc,fail:fail,failE:failE, tagged:tagged, notTagged:notTagged};
+
+function glo(index){
+var line =index; var site = 'https://globetravelsearch.com';  var siteT = 'VapeDirectory';  var id = 'vape';     
+var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0;var siteTE=0; var siteE=0; 
+var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
   var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);1
+  ScriptProperties.setProperties(newID);
 return line;
 }
 
+//sentE:sentE,sucE:sucE,iteE:siteE, siteTE:siteTE, 
+//sentE:sentE,sucE:sucE,siteE:siteE, siteTE:siteTE,ides:ides,  var siteE = 'https://organisemybiz.com/es';failE:failE,var siteTE = 'Organizar-Mi-Noticias'; 
+//var sentE=0;var sucE=0;var failE=0; var siteTE='Noticias-del-Equipacion Futbol';var siteE='es.customkitsworldwide.com';  
+
+
+function orgbiz(index){
+var site = 'https://organisemybiz.com';  var line =index; var siteT = 'OrganiseMyBiz';    var id = 'orgbiz';
+var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='orgbizes';
+var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail, tagged:tagged, notTagged:notTagged};
+  var ScriptProperties = PropertiesService.getScriptProperties();
+  ScriptProperties.setProperties(newID);
+return line;
+}
+//function fnres(index){
+///var ides = 'fnres';
+//var siteE = 'http://fakenewsregistry.org/es',siteE:siteE, ides:ides,failE:failE,sentE:sentE,sucE:sucE,ides:ides,
+///var sucE=0;var failE=0; var sentE=0; siteTE:siteTE,var ides='fnres'
+//ScriptProperties.setProperties(newID);
+//}
+
 function fnr(index){
- var line =index;var site = 'http://fakenewsregistry.org'; var siteT = 'FakeNewsRegistry';var id = 'fnr'; var siteTE = 'Falsas-Honcho Noticias'; var siteE = 'http://fakenewsregistry.org/es';
-var ides = 'fnres';var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='fnres';
-  var newID = {site: site, siteE:siteE, siteTE:siteTE, siteT: siteT,line:line, ides:ides, id:id, sent:sent,sentE:sentE,sucE:sucE,ides:ides,fail:fail,failE:failE, tagged:tagged, notTagged:notTagged};
+ var line =index;var site = 'http://fakenewsregistry.org'; var siteT = 'FakeNewsRegistry';var id = 'fnr'; var siteTE = 'Falsas-Honcho Noticias'; 
+var suc=0; var fail=0; var sent=0; var tagged=0; var notTagged=0;
+  var newID = {site: site,  siteT: siteT,line:line, id:id, sent:sent,fail:fail, tagged:tagged, notTagged:notTagged};
   var ScriptProperties = PropertiesService.getScriptProperties();
   ScriptProperties.setProperties(newID);
   return line;
