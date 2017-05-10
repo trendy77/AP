@@ -3,7 +3,7 @@ var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/
 var newSH = overview.getSheetByName("LIVE");
 var LOG = overview.getSheetByName("LOGS");
    /// get cell with current line info
-    var uptoSpot = newSH.getRange("B13").getValue();
+    var uptoSpot = newSH.getRange("B11").getValue();
       // get said range
   var idTosh = newSH.getRange(uptoSpot,7,1,9).getValues();
   for (var i = 0; i < idTosh.length; i++){ 
@@ -18,6 +18,7 @@ var result = {
     'tags': rowData[8],
     'image':rowData[6]
   };
+    Logger.log(rowData[8]);
   var options = {
    'method' : 'post',
     'payload' : result,
@@ -31,7 +32,7 @@ uptoSpot++;
     uptoSpot=2;
     }
       // set next line #
-  newSH.getRange('B13').setValue(uptoSpot);
+  newSH.getRange('B11').setValue(uptoSpot);
    // shoot off the POST Details
    
   if( line == 2){
@@ -56,8 +57,8 @@ var addy= 'https://vapedirectory.co/wau.php';
            var addy= 'https://organisemybiz.com/wau.php';
    }
 var response= UrlFetchApp.fetch(addy, options);
-  newSH.getRange(line,20).setValue(response);
- //LOG.appendRow([ 'response from ' + rowData[0] + ' is '+ response]);      
+  newSH.getRange("E11").setValue(response);
+    LOG.getRange("D2:G2").setValue[['response from ', rowData[0], ' is ', response]];      
            // if it worked
          if(!isNaN(parseFloat(response)) && isFinite(response)){
              // add one to the success tally
