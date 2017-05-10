@@ -215,44 +215,6 @@ sheet.deleteRow(2);
 }
 }
 
-function ezTranslate(){
-   var id = '1JrTSkbWDYmOxEYIJDgoZj2MRLlfa-BZ1Mk6tvD4cMNs';
-  var ovw = SpreadsheetApp.openById(id);
-  var sheet = ovw.getSheetByName("Sheet1");
- var data = sheet.getDataRange().getValues();
-var newData = new Array();                         // newData is an empty array where we will put all rows which are not duplicates.
-  for(i in data){
-    var row = data[i];                              //      for loop iterates over each row in the data 2-dimensional array. 
-    for(j in data[i]){                            
-      var col = data[j][i];
-    }
-var spanishHtml = LanguageApp.translate(data[1][j],'en', 'es', {contentType: 'html'});
-var spanishTit = LanguageApp.translate(data[0][j], 'en', 'es', {contentType: 'text'});
-var espD=([spanishTit,spanishHtml,data[2][j],data[3][j],data[4][j],data[5][j],data[6][j],data[7][j]]);
-  
-var destination = ovw.getSheetByName("Sheet3");
-destination.appendRow(espD);
-}
-}
-function ezSend() {
-  var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
-var newSH = overview.getSheetByName("LIVE");
-var upTo = newSH.getRange(15,4).getValue();
-if ((upTo == '4')||(upTo == '5')) {      // then there's no ESP specific site...
-  upTo++;
-}else{
-  for (var zz = 0; zz<7;zz++){
-     var id = rng[zz];
-     Logger.log(rng[zz]);
-      	 ezTranslate(id);
-   //  var id = ScriptProperties.getProperty('ides');
-//  var siteE = ScriptProperties.getProperty('siteE');var siteTE = ScriptProperties.getProperty('siteTE');
-// var id = ScriptProperties.getProperty('ides');
-//   var ss = SpreadsheetApp.getActiveSpreadsheet();
-return;
-}
-}
-}
 // INSERTED EXTRA LINES FOR INFO....v861a - tagging +remote title
 function dupCheck(){
 var ScriptProperties = PropertiesService.getScriptProperties();

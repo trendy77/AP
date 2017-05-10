@@ -5,21 +5,19 @@ var LOG = overview.getSheetByName("LOGS");
    /// get cell with current line info
     var uptoSpot = newSH.getRange("B13").getValue();
       // get said range
-  var idTosh = newSH.getRange(uptoSpot,7,1,8).getValues();
+  var idTosh = newSH.getRange(uptoSpot,7,1,9).getValues();
   for (var i = 0; i < idTosh.length; i++){ 
     var rowData = idTosh[i];
-  }
 var result = {
     'identifier': rowData[0],
     'title': rowData[1],
     'content': rowData[2],
-    'articleUrl': rowData[2],
-    'source': rowData[4],
-    'categories': rowData[3],
-    'tags': rowData[7],
-    'image':rowData[5]
+    'articleUrl': rowData[3],
+    'source': rowData[5],
+    'categories': rowData[4],
+    'tags': rowData[8],
+    'image':rowData[6]
   };
-  
   var options = {
    'method' : 'post',
     'payload' : result,
@@ -35,20 +33,43 @@ uptoSpot++;
       // set next line #
   newSH.getRange('B13').setValue(uptoSpot);
    // shoot off the POST Details
-var response= UrlFetchApp.fetch('https://trendypublishing.com.au/whyau.php', options);
-   LOG.appendRow([ 'response from ' + rowData[0] + ' is '+ response]);      
+   
+  if( line == 2){
+    var addy= 'http://fakenewsregistry.org/wau.php';
+} 
+else if (line == 3){
+  var addy= 'https://customkitsworldwide.com/AP/wau.php';
+}
+ else if (line == 4){
+var addy= 'https://vapedirectory.co/wau.php';
+  }
+   else if( line == 5){
+    var addy= 'https://govnews.info/wau.php';
+    }
+     else if( line == 6){
+       var addy= 'https://trendypublishing.com.au/wau.php';
+      }
+     else   if( line == 7){
+        var addy= 'https://trendypublishing.com/wau.php';
+        }
+      else    if( line == 8){
+           var addy= 'https://organisemybiz.com/wau.php';
+   }
+var response= UrlFetchApp.fetch(addy, options);
+  newSH.getRange(line,20).setValue(response);
+ //LOG.appendRow([ 'response from ' + rowData[0] + ' is '+ response]);      
            // if it worked
          if(!isNaN(parseFloat(response)) && isFinite(response)){
              // add one to the success tally
-        var win = newSH.getRange(line,16).getValue();  win++;newSH.getRange(line,16).setValue(win);
+        var win = newSH.getRange(line,16).getValue();  win++;newSH.getRange(line,17).setValue(win);
             }else{     // failure
-    var out = newSH.getRange(line,17).getValue(); out++; newSH.getRange(uptoSpot,17).setValue(out);
+    var out = newSH.getRange(line,17).getValue(); out++; newSH.getRange(line,18).setValue(out);
             }  
           // either way add a try, then prepare next line
-      var tot = newSH.getRange(line,18).getValue(); tot++;newSH.getRange(line,18).setValue(tot); 
+      var tot = newSH.getRange(line,18).getValue(); tot++;newSH.getRange(line,19).setValue(tot); 
     next(line);
     }
-
+}
 // finds number remaining posts and updates sheet
 function numberL(hhh){
  var ss = SpreadsheetApp.openById(hhh);
@@ -71,7 +92,7 @@ var nextSht = SpreadsheetApp.openById(li);
       var rngP = sss.getRange(3,1,1,8).getValues();
           // next line inserted into OVERVIEW
   var lineIn = newSH.getRange(line,8,1,8).setValues(rngP);
-       // then remove the line...
+  // then remove the line...
    sss.deleteRow(3);        
     return;
     }
