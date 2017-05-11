@@ -18,23 +18,22 @@ var result = {
     'tags': rowData[8],
     'image':rowData[6]
   };
-    Logger.log(rowData[8]);
-  var options = {
+       var options = {
    'method' : 'post',
     'payload' : result,
     'muteHttpExceptions' : true
  };
   var line = uptoSpot;
-LOG.appendRow(['title is ' + rowData[1]]);
- LOG.appendRow([ 'line uptoSpot is ' + uptoSpot]); 
+  var strCol = newSH.getRange("B12").getValue();
 uptoSpot++;
   if (uptoSpot==9){
-    uptoSpot=2;
+    uptoSpot=2; strCol++;
     }
       // set next line #
+  
   newSH.getRange('B11').setValue(uptoSpot);
-   // shoot off the POST Details
-   
+    // shoot off the POST Details
+ 
   if( line == 2){
     var addy= 'http://fakenewsregistry.org/wau.php';
 } 
@@ -57,17 +56,19 @@ var addy= 'https://vapedirectory.co/wau.php';
            var addy= 'https://organisemybiz.com/wau.php';
    }
 var response= UrlFetchApp.fetch(addy, options);
-  newSH.getRange("E11").setValue(response);
-    LOG.getRange("D2:G2").setValue[['response from ', rowData[0], ' is ', response]];      
-           // if it worked
+ 
+    newSH.getRange(line,strCol).setValue(response);
+    newSH.getRange('B12').setValue(strCol);
+  LOG.appendRow(['title is ' + rowData[1], 'line uptoSpot is ' + line, 'response is' + response]);     
+     // if it worked
          if(!isNaN(parseFloat(response)) && isFinite(response)){
              // add one to the success tally
-        var win = newSH.getRange(line,16).getValue();  win++;newSH.getRange(line,17).setValue(win);
+        var win = newSH.getRange(line,18).getValue();  win++;newSH.getRange(line,18).setValue(win);
             }else{     // failure
-    var out = newSH.getRange(line,17).getValue(); out++; newSH.getRange(line,18).setValue(out);
+    var out = newSH.getRange(line,19).getValue(); out++; newSH.getRange(line,19).setValue(out);
             }  
           // either way add a try, then prepare next line
-      var tot = newSH.getRange(line,18).getValue(); tot++;newSH.getRange(line,19).setValue(tot); 
+      var tot = newSH.getRange(line,20).getValue(); tot++;newSH.getRange(line,20).setValue(tot); 
     next(line);
     }
 }
@@ -78,7 +79,7 @@ function numberL(hhh){
  var gov1s = ss.getSheetByName("Sheet1");var rows = gov1s.getMaxRows();
 return rows;
 }
-    // param line - the next line in process order...
+   
 function next(line){
   var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
 var newSH = overview.getSheetByName("LIVE");
@@ -86,38 +87,37 @@ var newSH = overview.getSheetByName("LIVE");
   var li = newSH.getRange(line,3).getValue();
 var nextSht = SpreadsheetApp.openById(li);
   var sss = nextSht.getSheetByName('Sheet1');
-     // check lines remaining
+//ezSend();   // check lines remaining
            var left=  numberL(li);
       var tags = checkTags(li);
             // get the next row to post
       var rngP = sss.getRange(3,1,1,8).getValues();
           // next line inserted into OVERVIEW
   var lineIn = newSH.getRange(line,8,1,8).setValues(rngP);
-  // then remove the line...
+      // translate...
+  var spanishHtml = LanguageApp.translate(rngP[1],'en', 'es', {contentType: 'html'});
+var spanishTit = LanguageApp.translate(rngP[0], 'en', 'es', {contentType: 'text'});
+var destination = nextSht.getSheetByName("Sheet3");
+destination.appendRow([spanishTit,spanishHtml,rngP[2],rngP[3],rngP[4],rngP[5],rngP[6],rngP[7]]); 
+// then remove the line...
    sss.deleteRow(3);        
     return;
-    }
+}
 
 function getLines(){
 var t1 = new Date();
 var overview = SpreadsheetApp.openById('1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4'); 
 var newSH = overview.getSheetByName("LIVE"); 
-var LOG = overview.getSheetByName("LOGS");
- 
- 
+var LOG = overview.getSheetByName("LOGS"); 
  // get all ids
  var rng = newSH.getRange(2,3,7,1).getValues();
 var t2 = new Date();
-  
-  // for each id, open
+    // for each id, open
   for (var zz = 0; zz<6;zz++){
      var id = rng[zz];
- LOG.appendRow([ 'this rng aka: '+ rng[zz] + ' is :' + rng[zz]]);
-     var ovw = SpreadsheetApp.openById(id);
+      var ovw = SpreadsheetApp.openById(id);
   var sss =  ovw.getSheetByName('Sheet1');
-
 var nam= ovw.getName(); var urlss =ovw.getUrl(); var numm = sss.getMaxRows();
-
                //   insert 2ND COL sheet name, 3RD id(again), 4TH url,5TH numRowsLeft  6th TAGS 
           // row to post
 var tagd = checkTags(rng[zz]);
@@ -128,14 +128,13 @@ var tagd = checkTags(rng[zz]);
      var lineIn = newSH.getRange(zz+2,8,1,8).setValues(rngP);
     var fdsthis = new Date();
 var thissss1=  timeReport(t2,fdsthis);
-    LOG.appendRow([ 'time rep: ' + thissss1]);
+  //  LOG.appendRow([ 'time rep: ' + thissss1]);
   var tggd = checkTags(rng[zz]);
   var t3 = new Date();
 var zzd = timeReport(t1,t3);
- LOG.appendRow([ 'time end - t1: ' + zzd]);
+ //LOG.appendRow([ 'time end - t1: ' + zzd]);
   }
-  
- }
+  }
  
  function timeReport(t1,t2){
  var lengh = t2-t1;

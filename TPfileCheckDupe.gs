@@ -9,13 +9,15 @@ var files = DriveApp.searchFiles('mimeType = "' + MimeType.GOOGLE_SHEETS + '"');
    var spreadsheet = SpreadsheetApp.open(files.next());
 var boo = checkItTP(spreadsheet);
 if (boo == 0){
-newLog.AppendRow('iterateTP: found not new');
+
 } else if (boo == 1){
 var ggnew = true;
-newLog.AppendRow('iterateTP: found new');
+newLog.appendRow(['iterateTP: found new']);
+  var left=  numberL(li); 
+      var tags = checkTags(li);
 }
 var dupe =  filedupCheck(spreadsheet); 
-newLog.AppendRow('iterateTP: found ' +dupe + 'in '+ spreadsheet);
+newLog.appendRow(['iterateTP: found ' +dupe + 'w. lin# '+ spreadsheet]);
 }
 }
 
@@ -63,8 +65,9 @@ timeReport(t1,t2);
 
 function filedupCheck(spreadsheet){
   var t4=new Date();
- 
-  var sheet = spreadsheet.getSheetByName("Sheet1");
+  if(spreadsheet.getSheetByName("Sheet1")){
+    return;
+    ;
  var data = sheet.getDataRange().getValues();           
    var newData = new Array();       
    var diff = 0;           
@@ -88,4 +91,5 @@ function filedupCheck(spreadsheet){
    timeReport(t4,t5);
 return diff;
  }
+}
 

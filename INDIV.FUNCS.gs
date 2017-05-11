@@ -14,6 +14,9 @@ var id = range[line];
 
 function startTMPLT(line,id){
 var ss = SpreadsheetApp.openById(id);
+  if (ss.getSheetByName("Sheet5")){ 
+    return; 
+  } else {
 var sheet = ss.getSheetByName("Sheet1"); 
  sheetSet(id);
   
@@ -37,6 +40,7 @@ var sheet = ss.getSheetByName("Sheet1");
           if( line == 8){
             ckwwes(line);
           }
+}
 }
   function sheetSet(id) {
  //gets Prev sheet from Overview Doc
@@ -66,10 +70,19 @@ var sheet = ss.getSheetByName("Sheet1");
     //ss.deleteSheet(cop);
 return;
   }
-
-function ckww(index){
+  
+function ckwwes(index){
 // open sheet 
- 
+ var line =index;
+var site='https://es.customkitsworldwide.com'; 
+var id = 'ckww'; var siteT = 'CustomKitsWorldwide';  var id='ckwwes';
+var suc=0;var fail=0; var sent=0; 
+var newID = {site: site, ssiteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
+  var ScriptProperties = PropertiesService.getScriptProperties();
+  ScriptProperties.setProperties(newID);
+  return line;
+}
+function ckww(index){
 var line =index;
 var site='https://customkitsworldwide.com'; 
 var id = 'ckww'; var siteT = 'CustomKitsWorldwide';  var id='ckwwes';
@@ -96,8 +109,8 @@ return line;
 }
 
 function glo(index){
-var line =index; var site = 'https://globetravelsearch.com';  var siteT = 'VapeDirectory';  var id = 'vape';     
-var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0;var siteTE=0; var siteE=0; 
+var line =index; var site = 'https://globetravelsearch.com';  var siteT = 'GlobeTravelSearch';  var id = 'glo';     
+var suc=0;var fail=0; var sent=0; 
 var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
   var ScriptProperties = PropertiesService.getScriptProperties();
   ScriptProperties.setProperties(newID);
@@ -132,43 +145,7 @@ var suc=0; var fail=0; var sent=0; var tagged=0; var notTagged=0;
   ScriptProperties.setProperties(newID);
   return line;
 }
-   
 
-// INSERTED EXTRA LINES FOR INFO....v861a - tagging +remote title
-function dupCheck(options){
-var ScriptProperties = PropertiesService.getScriptProperties();
-var id = ScriptProperties.getProperty('id');
- var ss = SpreadsheetApp.getActiveSpreadsheet(); 
-  var sheet = ss.getSheetByName("Sheet1");
-   var data = sheet.getDataRange().getValues();            //we do a single call to the spreadsheet to retrieve all the data.
-  var newData = new Array();        var diff = 0;                   // newData is an empty array where we will put all rows which are not duplicates.
-  for(i in data){
-    var row = data[i];    var duplicate = false;                             //      for loop iterates over each row in the data 2-dimensional array. 
-    for(j in newData.length()){                            
-  if(row[0] == newData[j][0] || row[1] == newData[j][1]){
-  duplicate = true;
-}
-    }
-    if(!duplicate){
-      newData.push(row);
-      }
-  }  sheet.clearContents();                            //      the script deletes the existing content of the sheet and inserts the content of the newData array.
-   sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
-     if (data.length != newData.length){
-		diff = (data.length-newData.length);
-		var sheet5 = ss.getSheetByName('Sheet5');
-		var totDiff = ScriptProperties.getProperty('totDiff');
-			for (var z=0;z<diff;z++){
-			totDiff++;
-			}
-		var formattedDate = Utilities.formatDate(new Date(), "GMT+11", "dd-MM-yyyy_HH:mm''");
-		ScriptProperties.setProperty('totDiff', totDiff);
-	       var dee = ([diff,newData.length,formattedDate]);
-	sheet5.getRange(2,1,1,3).setValues([dee]);
-		}
- SpreadsheetApp.flush();
-  return diff ;
-}
  function sendXml(){
  var ScriptProperties = PropertiesService.getScriptProperties();
  var id = ScriptProperties.getProperty('id');var siteT = ScriptProperties.getProperty('siteT');  var site = ScriptProperties.getProperty('site');
@@ -205,12 +182,7 @@ var sheet = ss.getSheetByName("Sheet1");
  Logger.log(response.getContentText());
 var destination = ss.getSheetByName("Sheet2");
   destination.appendRow([title,desc,formattedDate]); 
-var spanishHtml = LanguageApp.translate(desc,'en', 'es', {contentType: 'html'});
-var spanishTit = LanguageApp.translate(title, 'en', 'es', {contentType: 'text'});
-var destination = ss.getSheetByName("Sheet3");
-destination.appendRow([spanishTit,spanishHtml,category,source,tags]); 
-sheet.deleteRow(2); 
-//ezSend();
+
 }
 }
 
