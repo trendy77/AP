@@ -111,7 +111,7 @@ class tpost extends WP_CLI_Command
         }
         chdir($rescue_directory);
         if (isset($config['url'])) {
-            WP_CLI::launch('open ' . $config['url']);
+  WP_CLI::launch('open ' . $config['url']);
         }
     }
 		

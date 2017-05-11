@@ -1,7 +1,7 @@
 <?php
 // client id :  1028943931412-c4p691egh52p706gcjgm5ni7kvdh7ru2.apps.googleusercontent.com 
 // secret :  qPppw87RNBzrAP1QTchy57-V 
-require_once '/home/ckww/ckwwAP/vendor/autoload.php';
+require_once '/home/$USER/AP/vendor/autoload.php';
 include_once 'tiPost.php';
 include_once 'base.php';
 
@@ -14,10 +14,6 @@ define('SCOPES', implode(' ', array(
   Google_Service_Sheets::SPREADSHEETS)
 ));
 
-/**
- * Returns an authorized API client.
- * @return Google_Client the authorized client object
- */
 function getClient() {
   $client = new Google_Client();
   $client->setApplicationName(APPLICATION_NAME);
@@ -35,11 +31,8 @@ function getClient() {
     echof("Open the following link in your browser:\n%s\n", $authUrl);
     echo 'Enter verification code: ';
     $authCode = trim(fgets(STDIN));
-
     // Exchange authorization code for an access token.
     $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
-
-    // Store the credentials to disk.
     if(!file_exists(dirname($credentialsPath))) {
       mkdir(dirname($credentialsPath), 0700, true);
     }
@@ -47,20 +40,12 @@ function getClient() {
     echof("Credentials saved to %s\n", $credentialsPath);
   }
   $client->setAccessToken($accessToken);
-
-  // Refresh the token if it's expired.
-  if ($client->isAccessTokenExpired()) {
+ if ($client->isAccessTokenExpired()) {
     $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
     file_put_contents($credentialsPath, json_encode($client->getAccessToken()));
   }
   return $client;
 }
-
-/**
- * Expands the home directory alias '~' to the full path.
- * @param string $path the path to expand.
- * @return string the expanded path.
- */
 function expandHomeDirectory($path) {
   $homeDirectory = getenv('HOME');
   if (empty($homeDirectory)) {
@@ -68,6 +53,9 @@ function expandHomeDirectory($path) {
   }
   return str_replace('~', realpath($homeDirectory), $path);
 }
+
+
+
 
 // Get the API client and construct the service object.
 $client = getClient();
@@ -97,7 +85,7 @@ if (count($values) == 0) {
 	$keywords=$row[7];
 	}
 	if ($keywords == null){
-		exit('no tags\n');
+		$keywords = add_hashTags($source);
 // ADD TAGS
 	} 
 	else {
@@ -106,10 +94,17 @@ if (count($values) == 0) {
 			//echo $post_excerpt."\n";
 		$obj= new autoTpost($identifier);
 		$obj->replaceImageMarkup($body);
-		if ($image != null){
-		echo $obj->createPostnImg($title,$keywords,$category,$post_excerpt,$body,$image);
-			}else{
-		echo $obj->createPost($title,$keywords,$category,$post_excerpt,$body);
+			if ($image != null){
+		$resp = echo $obj->createPostnImg($title,$keywords,$category,$post_excerpt,$body,$image);
+		} else {
+		$resp = echo $obj->createPost($title,$keywords,$category,$post_excerpt,$body);
+		}
+		if (is_numeric($resp)){
+		// DELETE OR MOVE ROW....
+		echo 'success!!!!';
+		} else {
+			// EPIC FAIL....
+		echo 'fail';
 		}
 	}
 }

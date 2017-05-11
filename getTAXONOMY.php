@@ -1,10 +1,10 @@
 <?php 
 // gets ID only
-$term_list = wp_get_post_terms($post->ID, 'coursecat', array("fields" => "ids"));
+$term_list = wp_get_post_terms($post->ID, 'tags', array("fields" => "ids"));
 $term->id = $term_list[0];
 
 // gets all term info
-$term_list_test = get_the_terms( $post->ID, 'coursecat' );
+$term_list_test = get_the_terms( $post->ID, 'tags' );
 print_r( $term_list_test );
 
 
