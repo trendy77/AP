@@ -27,7 +27,7 @@ global $user_ID;
 			$zeeCat = array();
 			
 			foreach ($catIds as $cat) {
-		    $idCat = get_category_by_slug($cat);
+		    $idCat = get_cat_ID($cat);
 		    $zid = $idCat->term_id;
 		    array_push($zeeCat, $zid);
 			}	
