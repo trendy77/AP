@@ -1,13 +1,16 @@
 function sendLine() {
-var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
+//var addy = 'https://trendypublishing.com.au';
+  var identi = 'tpau';
+  
+  var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
 var newSH = overview.getSheetByName("LIVE");
-var LOG = overview.getSheetByName("LOGS");
    /// get cell with current line info
     var uptoSpot = newSH.getRange("B11").getValue();
       // get said range
   var idTosh = newSH.getRange(uptoSpot,7,1,9).getValues();
   for (var i = 0; i < idTosh.length; i++){ 
     var rowData = idTosh[i];
+    var cats = splitTest(rowData[4]);
 var result = {
     'identifier': rowData[0],
     'title': rowData[1],
@@ -23,17 +26,10 @@ var result = {
     'payload' : result,
     'muteHttpExceptions' : true
  };
-  var line = uptoSpot;
+     var line = uptoSpot;
   var strCol = newSH.getRange("B12").getValue();
-uptoSpot++;
-  if (uptoSpot==9){
-    uptoSpot=2; strCol++;
-    }
-      // set next line #
-  
-  newSH.getRange('B11').setValue(uptoSpot);
-    // shoot off the POST Details
- 
+var strColo = strCol;
+      
   if( line == 2){
     var addy= 'http://fakenewsregistry.org/wau.php';
 } 
@@ -50,17 +46,22 @@ var addy= 'https://vapedirectory.co/wau.php';
        var addy= 'https://trendypublishing.com.au/wau.php';
       }
      else   if( line == 7){
-        var addy= 'https://trendypublishing.com/wau.php';
+        var addy= 'https://trendypublishing.com/remotePost.php';
         }
       else    if( line == 8){
            var addy= 'https://organisemybiz.com/wau.php';
    }
+uptoSpot++; 
+    var lineCol = strCol;
+  if (uptoSpot==9){
+    uptoSpot=2; strCol++;
+    }
+      // set next line #
+  newSH.getRange('B11').setValue(uptoSpot);
 var response= UrlFetchApp.fetch(addy, options);
- 
-    newSH.getRange(line,strCol).setValue(response);
+ Logger.log(response);
+newSH.getRange(line,strColo).setValue(response);
     newSH.getRange('B12').setValue(strCol);
-  LOG.appendRow(['title is ' + rowData[1], 'line uptoSpot is ' + line, 'response is' + response]);     
-     // if it worked
          if(!isNaN(parseFloat(response)) && isFinite(response)){
              // add one to the success tally
         var win = newSH.getRange(line,18).getValue();  win++;newSH.getRange(line,18).setValue(win);
@@ -72,12 +73,23 @@ var response= UrlFetchApp.fetch(addy, options);
     next(line);
     }
 }
+
+function splitTest() {
+  var array1 = [{}];
+  var string1 = "A, B, C, D";
+
+  array1 = string1.split(", ");
+  return array1
+}
+
 // finds number remaining posts and updates sheet
 function numberL(hhh){
- var ss = SpreadsheetApp.openById(hhh);
-//var gov2s = ss.getSheetByName("Sheet3");var leftE = gov2s.getMaxRows(); 
- var gov1s = ss.getSheetByName("Sheet1");var rows = gov1s.getMaxRows();
+ if(hhh.getSheetByName("Sheet1")){
+   var sheet = hhh.getSheetByName("Sheet1");
+ //var gov2s = ss.getSheetByName("Sheet3");var leftE = gov2s.getMaxRows(); 
+ var gov1s = hhh.getSheetByName("Sheet1");var rows = gov1s.getMaxRows();
 return rows;
+}
 }
    
 function next(line){
@@ -86,9 +98,9 @@ var newSH = overview.getSheetByName("LIVE");
     // get next row ID value
   var li = newSH.getRange(line,3).getValue();
 var nextSht = SpreadsheetApp.openById(li);
-  var sss = nextSht.getSheetByName('Sheet1');
-//ezSend();   // check lines remaining
-           var left=  numberL(li);
+  if(nextSht.getSheetByName("Sheet1")){ 
+    var sss = nextSht.getSheetByName('Sheet1');
+       var left=  numberL(li);
       var tags = checkTags(li);
             // get the next row to post
       var rngP = sss.getRange(3,1,1,8).getValues();
@@ -97,11 +109,16 @@ var nextSht = SpreadsheetApp.openById(li);
       // translate...
   var spanishHtml = LanguageApp.translate(rngP[1],'en', 'es', {contentType: 'html'});
 var spanishTit = LanguageApp.translate(rngP[0], 'en', 'es', {contentType: 'text'});
-var destination = nextSht.getSheetByName("Sheet3");
+  if (nextSht.getSheetByName("Sheet3")){
+  var destination = nextSht.getSheetByName("Sheet3");
 destination.appendRow([spanishTit,spanishHtml,rngP[2],rngP[3],rngP[4],rngP[5],rngP[6],rngP[7]]); 
+  } else {
+    start();
+  }
 // then remove the line...
-   sss.deleteRow(3);        
-    return;
+ sss.deleteRow(3);        
+ return;
+}
 }
 
 function getLines(){

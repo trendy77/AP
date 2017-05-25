@@ -146,6 +146,7 @@ var suc=0; var fail=0; var sent=0; var tagged=0; var notTagged=0;
   return line;
 }
 
+
  function sendXml(){
  var ScriptProperties = PropertiesService.getScriptProperties();
  var id = ScriptProperties.getProperty('id');var siteT = ScriptProperties.getProperty('siteT');  var site = ScriptProperties.getProperty('site');
@@ -162,12 +163,9 @@ var sheet = ss.getSheetByName("Sheet1");
     var image = rowData[5];
     var tags = rowData[7];
     }
-// var post_excerpt = "New post by " + source + " discussing " + tags + "here at " + siteT + ":" + post_title;
   if ((!desc) && (!post_title)){
    return 'error'; 
   } else {
- 	// ADD METATAGS 
-		//var html = ('<!DOCTYPE html><html><head><base target="_top"><meta charset="UTF-8"><title>' + post_title + '</title></head><body>' + desc + '<a href="' + articleUrl + '">Read Original Article HERE</a><br><a href="http://' + site + '/'+ category + '">View More HERE</a><br><a href="http://' + '/tag/' + source+ '">View More' + source + ' HERE</a><br></body></html>');
   var payload = {
    'identifier': id,
    'post_title': title,
@@ -175,10 +173,24 @@ var sheet = ss.getSheetByName("Sheet1");
      'categories': category,
      'tags': tags
     };    
-   var options = {
-        'method' : 'post',
+ // Instantiates a blob here for clarity
+ var blob = Utilities.newBlob("'headlines' : 'ExtJCJn%jRMzl1(5L5W*JBP#'");
+ var encoded = Utilities.base64EncodeWebSafe(blob.getBytes());
+
+    Logger.log(encoded);
+
+    var headers = array('Authorization:basic' ,encoded);
+
+    var url ='https://organisemybiz.com/';
+    var URL =url+'wp/v2/posts/1';
+ 
+ var options = {
+        'method' : 'POST',
+        'Authorization' : headers, 
       'payload' : payload
             };   
+ var response = UrlFetchApp.fetch(URL,options);    
+            
  Logger.log(response.getContentText());
 var destination = ss.getSheetByName("Sheet2");
   destination.appendRow([title,desc,formattedDate]); 

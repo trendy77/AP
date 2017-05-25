@@ -1,4 +1,18 @@
+function reset(){
+// FIRST DELETE ALL RESPONESE FROM SERVER....
+  var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
+  var newSH = overview.getSheetByName("LIVE");
+  var uptoSpot = newSH.getRange(2,21,8,newSH.getMaxColumns())
+    uptoSpot.clearContent(); 
 
+  // RESET THE COUNTERS...
+  var winLoss = newSH.getRange(2,18,8,3);
+    winLoss.clearContent(); 
+  
+  // SET UP2SPOTS BACK
+ newSH.getRange("B12").setValue('21');
+}   
+  
 
 function onInstall(e){
 start();onOpen();
@@ -6,9 +20,9 @@ start();onOpen();
 
 function onOpen() {
  SpreadsheetApp.getUi().createMenu('TrenDupChk')
- .addItem('runDupe on MASTERTP', 'fileIterateTP').addItem('runDupe on MASTER', 'fileIterate').addItem('start', 'start')
- .addItem('checkTags', 'checkTags').addItem('sendNext Row', 'gsendLine').addItem('get Rows', 'getLines')
- .addItem('dupLIVEcheck', 'dupLIVEcheck').addItem('allTrigs', 'menuItem2').addItem('getLines', 'getLineInfo').addItem('sendXml', 'sendLine')
+ .addItem('iterate on MASTERTP', 'fileIterateTP').addItem('iterate on MASTER', 'fileIterate').addItem('start', 'start')
+ .addItem('checkTags', 'checkTags').addItem('get Next Row', 'getLine').addItem('get Rows', 'getLines')
+ .addItem('dupLIVEcheck', 'dupLIVEcheck').addItem('send line', 'sendLine').addItem('reset', 'reset')// .addItem('sendXml', 'sendLine')
   .addToUi();
 }
   
