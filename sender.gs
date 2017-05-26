@@ -1,17 +1,41 @@
 function sendLine() {
 //var addy = 'https://trendypublishing.com.au';
   var identi = 'tpau';
-  
-  var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
+
+var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
 var newSH = overview.getSheetByName("LIVE");
-   /// get cell with current line info
-    var uptoSpot = newSH.getRange("B11").getValue();
-      // get said range
-  var idTosh = newSH.getRange(uptoSpot,7,1,9).getValues();
+
+  // GET LINE TO SEND...
+  var ScriptProperties = PropertiesService.getScriptProperties();
+  var line2go = ScriptProperties.getProperty('line2go'); 
+  var responseCol = ScriptProperties.getProperty('responseCol');
+  
+  Logger.log(line2go);    Logger.log('line2go is ', line2go);
+  
+  if (line2go=='9'){
+    line2go=2; responseCol++;
+    }
+  
+  var lineGone = line2go;
+ 
+  // TEST...
+ var sameOr = line2go; 
+ line2go = line2go++;
+   
+ Logger.log('line2goNow is ', line2go);
+  Logger.log('this is the same/should be one more yeh', sameOr);
+ 
+     // HIGHLIGHT THE FOLLOWING LINE...
+var idTosh = newSH.getRange(line2go,7,1,9).setBackground('yellow');
+ // UN-HIGHLIGHT THE PRIOR LINE...
+newSH.getRange(lineGone,7,1,9).setBackground('grey');
+    
+  // GET THE POST @ LINE 2 SEND ....
+var idTosh = newSH.getRange(line2go,7,1,9).getValues();
   for (var i = 0; i < idTosh.length; i++){ 
-    var rowData = idTosh[i];
-    var cats = splitTest(rowData[4]);
-var result = {
+    var rowData = idTosh[i]; 
+   
+    var result = {
     'identifier': rowData[0],
     'title': rowData[1],
     'content': rowData[2],
@@ -21,206 +45,188 @@ var result = {
     'tags': rowData[8],
     'image':rowData[6]
   };
+     
+    if (isBlank(title) && isBlank(content)){
+ MailApp.sendEmail('trendypublishingau@gmail.com', 'no data @ line#' + line2go, 'https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit');
+      Logger.log('no info @ line...');
+      return;
+    } else { 
+  
        var options = {
-   'method' : 'post',
-    'payload' : result,
-    'muteHttpExceptions' : true
- };
-     var line = uptoSpot;
-  var strCol = newSH.getRange("B12").getValue();
-var strColo = strCol;
-      
-  if( line == 2){
-    var addy= 'http://fakenewsregistry.org/wau.php';
-} 
-else if (line == 3){
+         'method' : 'post',
+         'params': '',
+         'payload' : result,
+         'muteHttpExceptions' : true
+ }
+if( lineGone == 2){
+   var addy= 'http://fakenewsregistry.org/wau.php';
+  }   
+  else if (lineGone == 3){
   var addy= 'https://customkitsworldwide.com/AP/wau.php';
-}
- else if (line == 4){
-var addy= 'https://vapedirectory.co/wau.php';
   }
-   else if( line == 5){
+  else if (lineGone == 4){
+  var addy= 'https://vapedirectory.co/wau.php';
+  }
+   else if( lineGone == 5){
     var addy= 'https://govnews.info/wau.php';
     }
-     else if( line == 6){
+     else if( lineGone == 6){
        var addy= 'https://trendypublishing.com.au/wau.php';
       }
-     else   if( line == 7){
+     else   if( lineGone == 7){
         var addy= 'https://trendypublishing.com/remotePost.php';
         }
-      else    if( line == 8){
-           var addy= 'https://organisemybiz.com/wau.php';
+      else    if( lineGone == 8){
+       var addy= 'https://organisemybiz.com/wau.php';
    }
-uptoSpot++; 
-    var lineCol = strCol;
-  if (uptoSpot==9){
-    uptoSpot=2; strCol++;
-    }
-      // set next line #
-  newSH.getRange('B11').setValue(uptoSpot);
 var response= UrlFetchApp.fetch(addy, options);
- Logger.log(response);
-newSH.getRange(line,strColo).setValue(response);
-    newSH.getRange('B12').setValue(strCol);
-         if(!isNaN(parseFloat(response)) && isFinite(response)){
-             // add one to the success tally
-        var win = newSH.getRange(line,18).getValue();  win++;newSH.getRange(line,18).setValue(win);
-            }else{     // failure
-    var out = newSH.getRange(line,19).getValue(); out++; newSH.getRange(line,19).setValue(out);
+
+      // LOG AND SAVE RESPONSE...
+      Logger.log(response);
+newSH.getRange(lineGone,responseCol).setValue(response);
+       
+      // SCORE OR FAIL?
+      if(!isNaN(parseFloat(response)) && isFinite(response)){
+        var suc = newSH.getRange(lineGone,18).getValue();  suc++;newSH.getRange(lineGone,18).setValue(suc);
+            }else{  
+              var fail = newSH.getRange(lineGone,19).getValue(); fail++; newSH.getRange(lineGone,19).setValue(fail);
             }  
-          // either way add a try, then prepare next line
-      var tot = newSH.getRange(line,20).getValue(); tot++;newSH.getRange(line,20).setValue(tot); 
-    next(line);
+    // ADD ONE TO THE ATTEMPTS, EITHER WAY...
+      var tot = newSH.getRange(lineGone,20).getValue(); 
+      tot++;
+      newSH.getRange(lineGone,20).setValue(tot); 
+      var newProperties = {tot: tot, suc: suc, fail: fail, line2go: line2go, lastSent:lineGone };
+ ScriptProperties.setProperties(newProperties);
+ 
+   // PREPARE THE POST IN THE PLACE OF THE ONE JUST SENT.... 
+      refill(lineGone);
     }
 }
 
-function splitTest() {
-  var array1 = [{}];
-  var string1 = "A, B, C, D";
-
-  array1 = string1.split(", ");
-  return array1
-}
 
 // finds number remaining posts and updates sheet
-function numberL(hhh){
- if(hhh.getSheetByName("Sheet1")){
+function numberL(){
+  var hhh = SpreadsheetApp.getActiveSpreadsheet();
+  try {
    var sheet = hhh.getSheetByName("Sheet1");
- //var gov2s = ss.getSheetByName("Sheet3");var leftE = gov2s.getMaxRows(); 
- var gov1s = hhh.getSheetByName("Sheet1");var rows = gov1s.getMaxRows();
-return rows;
-}
-}
-   
-function next(line){
-  var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
-var newSH = overview.getSheetByName("LIVE");
-    // get next row ID value
-  var li = newSH.getRange(line,3).getValue();
-var nextSht = SpreadsheetApp.openById(li);
-  if(nextSht.getSheetByName("Sheet1")){ 
-    var sss = nextSht.getSheetByName('Sheet1');
-       var left=  numberL(li);
-      var tags = checkTags(li);
-            // get the next row to post
-      var rngP = sss.getRange(3,1,1,8).getValues();
-          // next line inserted into OVERVIEW
-  var lineIn = newSH.getRange(line,8,1,8).setValues(rngP);
-      // translate...
-  var spanishHtml = LanguageApp.translate(rngP[1],'en', 'es', {contentType: 'html'});
-var spanishTit = LanguageApp.translate(rngP[0], 'en', 'es', {contentType: 'text'});
-  if (nextSht.getSheetByName("Sheet3")){
-  var destination = nextSht.getSheetByName("Sheet3");
-destination.appendRow([spanishTit,spanishHtml,rngP[2],rngP[3],rngP[4],rngP[5],rngP[6],rngP[7]]); 
-  } else {
-    start();
+  } catch(e){
+    return 'error no sheet1...'
   }
-// then remove the line...
+    var gov2s = ss.getSheetByName("Sheet3");
+    Logger.log('last row',gov2s.getLastRow());
+    var leftE = gov2s.getMaxRows(); 
+ Logger.log('max rows',leftE);
+  var rows = sheet.getLastRows();
+    Logger.log('last row',rows);
+    var left = gov1s.getMaxRows(); 
+ Logger.log('max rows',left);
+  return left;
+}
+
+   
+function refill(line){
+var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit'); 
+var newSH = overview.getSheetByName("LIVE");
+
+  // get next row ID to OPEN
+  var li = newSH.getRange(line,3).getValue();
+
+  var nextSht = SpreadsheetApp.openById(li);
+  
+  try { 
+    var sss = nextSht.getSheetByName('Sheet1');
+        } catch(e){
+      return 'error - no sheet 1?';
+    }
+   // check REMAINING LINES IN SHEET
+    var left=  numberL();
+  // check TAGS
+    var tags = AUTOcheckTags(li);
+            
+  var rngP = sss.getRange(3,1,1,8).getValues();
+        
+  // insert into OVERVIEW
+  var lineIn = newSH.getRange(line,8,1,8).setValues(rngP);
+    // translate...
+var spanishHtml = LanguageApp.translate(rngP[1],'en', 'es', {contentType: 'html'});
+var spanishTit = LanguageApp.translate(rngP[0], 'en', 'es', {contentType: 'text'});
+
+  if(!nextSht.getSheetByName("Sheet3")){
+  start();
+  };
+var destination = nextSht.getSheetByName("Sheet3");
+destination.appendRow([spanishTit,spanishHtml,rngP[2],rngP[3],rngP[4],rngP[5],rngP[6],rngP[7]]); 
+
+  // COPY TO SHEET 2 FOR POSTERITY...
+  SECSht.getSheetByName("Sheet2");
+    SECSht.appendRow(rngP);
+  
+  // DELETE LINE...
  sss.deleteRow(3);        
  return;
 }
 }
 
-function getLines(){
-var t1 = new Date();
+function getALLfiveLines(){
+var t1 = startClock('allLIVElines');
 var overview = SpreadsheetApp.openById('1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4'); 
 var newSH = overview.getSheetByName("LIVE"); 
-var LOG = overview.getSheetByName("LOGS"); 
- // get all ids
+
+  // get all LINES OF IDS = rng[x, y, z...]
  var rng = newSH.getRange(2,3,7,1).getValues();
-var t2 = new Date();
-    // for each id, open
+
+  // TIME @ START OF GETTING LINES
+  var LEN = timeChk(t1);
   for (var zz = 0; zz<6;zz++){
      var id = rng[zz];
       var ovw = SpreadsheetApp.openById(id);
-  var sss =  ovw.getSheetByName('Sheet1');
-var nam= ovw.getName(); var urlss =ovw.getUrl(); var numm = sss.getMaxRows();
-               //   insert 2ND COL sheet name, 3RD id(again), 4TH url,5TH numRowsLeft  6th TAGS 
-          // row to post
-var tagd = checkTags(rng[zz]);
-  LOG.appendRow( ['numm rows is ' + numm + 'tagged are '+ tagd]);
-  var rngP = sss.getRange(3,1,1,8).getValues();
-     var thisss= ([nam,id,urlss,numm, tagd]);
-     var move = newSH.getRange(zz+2,2,1,5).setValues([thisss]);  // or 8+5?
-     var lineIn = newSH.getRange(zz+2,8,1,8).setValues(rngP);
-    var fdsthis = new Date();
-var thissss1=  timeReport(t2,fdsthis);
-  //  LOG.appendRow([ 'time rep: ' + thissss1]);
-  var tggd = checkTags(rng[zz]);
-  var t3 = new Date();
-var zzd = timeReport(t1,t3);
- //LOG.appendRow([ 'time end - t1: ' + zzd]);
-  }
-  }
- 
- function timeReport(t1,t2){
- var lengh = t2-t1;
-return lengh;
-}
-
-function checkLIVEDups(){
-//var t1=newDate();
-  var overview = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit');
-var newSH = overview.getSheetByName("LIVE");
-  var sheetTarg = newSH.getRange(2,3,7).getValues(); 
-      for (z in sheetTarg){
-   var diff = filedupCheck(sheetTarg[z]);
-      }
+    try {
+    var sss =  ovw.getSheetByName('Sheet1');
+    }catch(e){
+ Logger.log(e.line, e.message);
     }
+        var nam= ovw.getName(); var urlss =ovw.getUrl(); var numm = sss.getMaxRows();
+    
+    //   insert 2ND COL sheet name, 3RD id(again), 4TH url,5TH numRowsLeft  6th TAGS lenar tagd = checkTags(rng[zz]);
+  Logger.log( ['nam'+' numm rows is ' + numm + 'tagged are '+ tagd]);
+     var rngP = sss.getRange(3,1,1,8).getValues();
+    var thisss= ([nam,id,urlss,numm, tagd]);  
+       var move = newSH.getRange(zz+2,2,1,5).setValues([thisss]);  // or 8+5?
+     var lineIn = newSH.getRange(zz+2,8,1,8).setValues(rngP);
+      timeChk(t1);
+    }
+  }
+
 
 function isCellEmpty(cellData) {
   return typeof(cellData) == "string" && cellData == "";
 }
 
-function filedupCheck(sheetTarg){
-   var spreadsheet = SpreadsheetApp.openById(sheetTarg);
-    var ssid = spreadsheet.getId();    var url = spreadsheet.getUrl();
- var sheet = spreadsheet.getSheetByName("Sheet1");
-  var name = spreadsheet.getName();
- if (sheet== null){
- return;
- } else {
- var data = sheet.getDataRange().getValues();           
-   var newData = new Array();       
-   var diff = 0;           
-   for(i in data){
-     var row = data[i];    
-     var duplicate = false;                
-    for(j in newData){                            
-  if(row[0] == newData[j][0] || row[2] == newData[j][2]){
-  duplicate = true;
-      }
-    }
-    if(!duplicate){
-      newData.push(row);
-      }
-    }  
-    sheet.clearContents();  
-    sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
-    diff = (data.length-newData.length);
-  return diff;
-}
-}
-
-
-// param - sheet ID - checks number of tags
- function checkTags(ssid){
- var ta = new Date();
-var tagged = 0;var notTagged = 0;
+ function AUTOcheckNumNTags(ssid){
+   var numberLeft = 0;
+   var tagged = 0;
+   var notTagged = 0;var unsure=0;
  var ss=SpreadsheetApp.openById(ssid);
-   var sheet = ss.getSheetByName("Sheet1");
-
- var numm= sheet.getMaxRows();
- var rows=sheet.getRange(2,8,numm,1).getValues();
-    for (var row=1; row < numm; row++) { 
-      if (isCellEmpty(row)) {
-        notTagged++;
-            } else {
-            tagged++;
-    }
-}
-return tagged;
-}
+ var sheet = ss.getSheetByName("Sheet1");
+ var maxRows = sheet.getMaxRows();
+  var rows=sheet.getRange(1,8,maxRows,1).getValues();
+  for (row in rows) { 
+      if (isCellEmpty(rows[row])) {
+      untagged++;
+        var furtherLook = sheet.getRange(rows[row],1,1,2).getValues();
+        if (!isCellEmpty(furtherlook[0]) &&(!isCellEmpty(furtherlook[1]))){
+          numberLeft++;
+        } else {
+          unsure++;
+        }
+      }
+    else {
+      tagged++; numberLeft++;
+       }
+  }
+ var results = ([[numberLeft,tagged,notTagged,unsure]]);
+return results;
+ }
 
 
 function ezTranslateNsave() {

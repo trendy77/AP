@@ -1,224 +1,82 @@
-//////   start ---> strtTEMPLT(line,id)  ----> sheetset(id of sheet)  ----->duplisheet ---->
 
-
-function start(){
-  var url = 'https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit#gid=0';
-   var ov= SpreadsheetApp.openByUrl(url);
-     var dest = ov.getSheetByName("LIVE");
-var range = dest.getRange(2, 3,7,1).getValues();
-for (var line =2; line < range.length;line++){
-var id = range[line];
-  startTMPLT(line,id);
-}
-}
-
-function startTMPLT(line,id){
-var ss = SpreadsheetApp.openById(id);
-  if (ss.getSheetByName("Sheet5")){ 
-    return; 
-  } else {
-var sheet = ss.getSheetByName("Sheet1"); 
- sheetSet(id);
   
-  if( line == 2){
-    fnr(line);
-} if (line == 3){
-  ckww(line);
-}
-  if (line == 4){
-  vape(line);
-  }
-    if( line == 5){
-     gov(line); 
-    }
-      if( line == 6){
-        glo(line);
-      }
-        if( line == 7){
-        orgbiz(line);  
-        }
-          if( line == 8){
-            ckwwes(line);
-          }
-}
-}
-  function sheetSet(id) {
- //gets Prev sheet from Overview Doc
- var url = 'https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit#gid=0';
-   var ov= SpreadsheetApp.openByUrl(url);
-      var sum= SpreadsheetApp.openById(id);
-//in overview, creates named sheet and sends to itself
-     var cop =sum.getSheetByName("Sheet2");
-  if(!cop){
-    var dest = ov.getSheetByName("TEMPLATE");
-  var copy = dest.copyTo(sum);
-    dupliSheet(cop,id);
-  // 5 sheets made
-   }
- SpreadsheetApp.flush();
-    return;
-  }
 
-  function dupliSheet(cop,id){  
-//   duplicates the sheet 5 times  
- var ss = SpreadsheetApp.openById(id);
-    var a="Sheet2";var ba="Sheet3";var ca="Sheet4";var dca="Sheet5";
-    var sheet2 =ss.insertSheet(a, {template: cop});
-    var sheet3 =ss.insertSheet(ca, {template: cop});
-    var sheet4 =ss.insertSheet(ba, {template: cop});
-    var sheet5 =ss.insertSheet(dca, {template: cop});
-    //ss.deleteSheet(cop);
-return;
-  }
+function tester(){
+  var idsh = '12cLS6o_M8wi4xAENE1LxcEbiSIirT9q9L4CFzsnMus8';
+ var ID = 'orgbiz'; 
+ var resp= sendXml(idsh);
   
-function ckwwes(index){
-// open sheet 
- var line =index;
-var site='https://es.customkitsworldwide.com'; 
-var id = 'ckww'; var siteT = 'CustomKitsWorldwide';  var id='ckwwes';
-var suc=0;var fail=0; var sent=0; 
-var newID = {site: site, ssiteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-  return line;
-}
-function ckww(index){
-var line =index;
-var site='https://customkitsworldwide.com'; 
-var id = 'ckww'; var siteT = 'CustomKitsWorldwide';  var id='ckwwes';
-var suc=0;var fail=0; var sent=0; 
-var newID = {site: site, ssiteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-  return line;
-}
-function gov(index){
-var line =index;var site = 'https://govnews.info'; var siteT = 'GovNews';var siteTE=0; var id = 'gov'; var suc=0;var sucE=0;var siteE = 0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='ides';
-var newID = {site: site, siteE:siteE, siteTE:siteTE, siteT: siteT,line:line, ides:ides,  id:id, sent:sent,sentE:sentE,sucE:sucE,suc:suc,fail:fail,failE:failE};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-  return line;
-}
-function vape(index){
-var line =index; var site = 'https://vapedirectory.co';  var siteT = 'VapeDirectory';  var id = 'vape';     
-var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0;var siteTE=0; var siteE=0; 
-var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-return line;
+  Logger.log(ID, resp);
 }
 
-function glo(index){
-var line =index; var site = 'https://globetravelsearch.com';  var siteT = 'GlobeTravelSearch';  var id = 'glo';     
-var suc=0;var fail=0; var sent=0; 
-var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-return line;
-}
+ function sendXml(ID, idsh){
 
-//sentE:sentE,sucE:sucE,iteE:siteE, siteTE:siteTE, 
-//sentE:sentE,sucE:sucE,siteE:siteE, siteTE:siteTE,ides:ides,  var siteE = 'https://organisemybiz.com/es';failE:failE,var siteTE = 'Organizar-Mi-Noticias'; 
-//var sentE=0;var sucE=0;var failE=0; var siteTE='Noticias-del-Equipacion Futbol';var siteE='es.customkitsworldwide.com';  
-
-
-function orgbiz(index){
-var site = 'https://organisemybiz.com';  var line =index; var siteT = 'OrganiseMyBiz';    var id = 'orgbiz';
-var suc=0;var sucE=0;var failE=0; var fail=0; var sent=0;  var sentE=0; var tagged=0; var notTagged=0;var ides='orgbizes';
-var newID = {site: site, siteT: siteT,line:line, id:id, sent:sent,suc:suc,fail:fail, tagged:tagged, notTagged:notTagged};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-return line;
-}
-//function fnres(index){
-///var ides = 'fnres';
-//var siteE = 'http://fakenewsregistry.org/es',siteE:siteE, ides:ides,failE:failE,sentE:sentE,sucE:sucE,ides:ides,
-///var sucE=0;var failE=0; var sentE=0; siteTE:siteTE,var ides='fnres'
-//ScriptProperties.setProperties(newID);
-//}
-
-function fnr(index){
- var line =index;var site = 'http://fakenewsregistry.org'; var siteT = 'FakeNewsRegistry';var id = 'fnr'; var siteTE = 'Falsas-Honcho Noticias'; 
-var suc=0; var fail=0; var sent=0; var tagged=0; var notTagged=0;
-  var newID = {site: site,  siteT: siteT,line:line, id:id, sent:sent,fail:fail, tagged:tagged, notTagged:notTagged};
-  var ScriptProperties = PropertiesService.getScriptProperties();
-  ScriptProperties.setProperties(newID);
-  return line;
-}
-
-
- function sendXml(){
- var ScriptProperties = PropertiesService.getScriptProperties();
- var id = ScriptProperties.getProperty('id');var siteT = ScriptProperties.getProperty('siteT');  var site = ScriptProperties.getProperty('site');
- var ss = SpreadsheetApp.getActiveSpreadsheet();
+   var ss = SpreadsheetApp.openById(idsh);
 var sheet = ss.getSheetByName("Sheet1");
- var range = sheet.getRange(2, 1, 1, 9); var data = range.getValues();
+var range = sheet.getRange(3, 1, 1, 8); var data = range.getValues();
   for (var i = 0; i < data.length; i++){ 
     var rowData = data[i];
-    var title = rowData[0];  
+    var post_title = rowData[0];  
     var desc = rowData[1]; 
     var articleUrl = rowData[2];
 	var category = rowData[3];  
-    var source = rowData[4];  
+    var wp_author_display_name = rowData[4];  
     var image = rowData[5];
     var tags = rowData[7];
     }
+ 
   if ((!desc) && (!post_title)){
-   return 'error'; 
+  return 'error NO TITLE OR CONTENT'; 
   } else {
-  var payload = {
-   'identifier': id,
-   'post_title': title,
-    'post_content': desc,
-     'categories': category,
+   var payload = {
+   'identifier': ID,
+   'post_title': post_title,
+    'post_content': post_content,
+    'post_excerpt': post_excerpt, 
+    'categories': category,
      'tags': tags
     };    
- // Instantiates a blob here for clarity
- var blob = Utilities.newBlob("'headlines' : 'ExtJCJn%jRMzl1(5L5W*JBP#'");
- var encoded = Utilities.base64EncodeWebSafe(blob.getBytes());
-
-    Logger.log(encoded);
-
-    var headers = array('Authorization:basic' ,encoded);
-
-    var url ='https://organisemybiz.com/';
-    var URL =url+'wp/v2/posts/1';
- 
- var options = {
-        'method' : 'POST',
-        'Authorization' : headers, 
+   var options = {
+        'method' : 'post',
       'payload' : payload
             };   
- var response = UrlFetchApp.fetch(URL,options);    
-            
+     var url= 'organisemybiz.com/wau.php';  
+  var response = UrlFetchApp.fetch(url, options);
  Logger.log(response.getContentText());
+ 
+ var ScriptProperties = PropertiesService.getScriptProperties();
+ var thh = ScriptProperties.getProperty('sent'); 
+ var suc = ScriptProperties.getProperty('suc'); var fail = ScriptProperties.getProperty('fail');
+ if(!isNaN(parseFloat(response)) && isFinite(response)){
+    suc++;
+		var formattedDate = Utilities.formatDate(new Date(), "GMT+11", "dd-MM-yyyy'@'HH:mm''");
+     }else{
+   fail++;
+      }  
+ thh++;
+    var values44 = ([thh, suc, fail, response]);
+return values44;
+  }
+    var main = ss.getSheetByName("Sheet2");
+
+ var newProperties = {sent: res, suc: suc, fail: fail};
+ ScriptProperties.setProperties(newProperties);
+if (res==1){
 var destination = ss.getSheetByName("Sheet2");
-  destination.appendRow([title,desc,formattedDate]); 
-
+  destination.appendRow([post_title,response,formattedDate]); 
+var spanishHtml = LanguageApp.translate(post_content,'en', 'es', {contentType: 'html'});
+var spanishTit = LanguageApp.translate(post_title, 'en', 'es', {contentType: 'text'});
+var Sphtml = "New post by " + wp_author_display_name + " discussing " + tags + "." + post_title;
+var spanishExc = LanguageApp.translate(Sphtml, 'en', 'es', {contentType: 'text'});
+var ss = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1JIk3NlUVH300FRxUfUEXSDyYht_CyU5bZp1M8WQ9ET4/edit');
+var id = ID + 'es';
+  var destination2222 = ss.getSheetByName(id);
+destination2222.appendRow([spanishTit,spanishHtml,spanishExc,category,tags]); 
+sheet.deleteRow(2); 
+//ezSend();
+} else {
+var destination = ss.getSheetByName("Sheet2");
+destination.appendRow([post_title,post_content,post_excerpt,category,tags]); 
 }
-}
-
-// INSERTED EXTRA LINES FOR INFO....v861a - tagging +remote title
-function dupCheck(){
-var ScriptProperties = PropertiesService.getScriptProperties();
-var id = ScriptProperties.getProperty('id');
- var ss = SpreadsheetApp.getActiveSpreadsheet(); 
-  var sheet = ss.getSheetByName("Sheet1");
-   var data = sheet.getDataRange().getValues();            //we do a single call to the spreadsheet to retrieve all the data.
-  var newData = new Array();        var diff = 0;                   // newData is an empty array where we will put all rows which are not duplicates.
-  for(i in data){
-    var row = data[i];    var duplicate = false;                             //      for loop iterates over each row in the data 2-dimensional array. 
-    for(j in newData){                            
-  if(row[0] == newData[j][0] || row[1] == newData[j][1]){
-  duplicate = true;
-}
-    }
-    if(!duplicate){
-      newData.push(row);
-      }
-  }  sheet.clearContents();                            //      the script deletes the existing content of the sheet and inserts the content of the newData array.
-   sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
- SpreadsheetApp.flush();
-return diff;
 }
 
